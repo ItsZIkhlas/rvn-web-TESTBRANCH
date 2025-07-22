@@ -74,7 +74,7 @@ export function SessionCard({ session }: { session: Session }) {
   return (
     <Card className="bg-neutral-950 border border-white/10 rounded-xl shadow-sm transition hover:shadow-md text-white">
       <CardContent className="p-5 flex flex-col gap-4">
-        <div className="flex items-center justify-between text-sm text-white/70">
+        <div className="flex items-center justify-between text-md text-white/70">
           <div className="flex items-center gap-2">
             <MapPin className="w-4 h-4 text-orange-500" />
             <span>{session.track_name}</span>
@@ -90,36 +90,36 @@ export function SessionCard({ session }: { session: Session }) {
         </div>
 
         <div className="text-center">
-          <div className="text-4xl font-extrabold text-white">
+          <div className="text-6xl font-extrabold text-white">
             {session.fastest_lap.startsWith("00:")
               ? session.fastest_lap.slice(3)
               : session.fastest_lap}
           </div>
-          <div className="text-sm text-orange-400 font-medium mt-1">
+          <div className="text-md text-orange-400 font-medium mt-1">
             Fastest Lap
           </div>
         </div>
 
         <div className="grid grid-cols-3 text-center mt-4">
           <div>
-            <div className="text-md font-semibold text-blue-400">
+            <div className="text-lg font-semibold text-blue-400">
               {session.average_lap.startsWith("00:")
                 ? session.average_lap.slice(3)
                 : session.average_lap}
             </div>
-            <div className="text-xs text-white/60 mt-1">Avg Lap</div>
+            <div className="text-sm text-white/60 mt-1">Avg Lap</div>
           </div>
           <div>
-            <div className="text-md font-semibold">{session.top_speed}</div>
-            <div className="text-xs text-white/60 mt-1">Top Speed</div>
+            <div className="text-lg font-semibold">{session.top_speed}</div>
+            <div className="text-sm text-white/60 mt-1">Top Speed</div>
           </div>
           <div>
-            <div className="text-md font-semibold">{session.total_laps}</div>
-            <div className="text-xs text-white/60 mt-1">Laps</div>
+            <div className="text-ls font-semibold">{session.total_laps}</div>
+            <div className="text-sm text-white/60 mt-1">Laps</div>
           </div>
         </div>
 
-        <div className="flex justify-between text-sm mt-4 border-t border-white/10 pt-4">
+        <div className="flex justify-between text-md mt-4 border-t border-white/10 pt-4">
           <div>
             <div className="text-white">
               <span className="font-medium">Lean Max:</span>{" "}
@@ -131,8 +131,8 @@ export function SessionCard({ session }: { session: Session }) {
             </div>
           </div>
           <div className="text-right">
-            <div className="text-white/70 text-xs">Track Temp</div>
-            <div className="text-white font-semibold text-md">
+            <div className="text-white/70 text-sm">Track Temp</div>
+            <div className="text-white font-semibold text-lg">
               {session.track_temperature}
             </div>
           </div>
@@ -167,13 +167,12 @@ export function CarouselDemo() {
   );
 
   return (
-    <div className="w-full max-w-3xl rounded-2xl shadow-md p-6 border border-grey-200 rounded-xl shadow-sm transition hover:shadow-md bg-[linear-gradient(to_bottom,rgba(0,0,0,0.6)_20%,rgba(38,38,38,0.2)_80%,rgba(255,255,255,0.05)_100%)]">
+    <div className="w-full max-w-4xl rounded-2xl shadow-md p-6 border border-grey-200 rounded-xl shadow-sm transition hover:shadow-md bg-[linear-gradient(to_bottom,rgba(0,0,0,0.6)_20%,rgba(38,38,38,0.2)_80%,rgba(255,255,255,0.05)_100%)]">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-2">
         <h2 className="text-xl font-semibold text-white">Recent Sessions</h2>
 
         <div className="flex gap-3">
-          <RefreshButton onRefresh={refresh} size="sm" variant="outline" />
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="outline" size="sm">
@@ -184,6 +183,11 @@ export function CarouselDemo() {
             <DialogContent className="max-w-3xl max-h-[80vh] overflow-auto">
               <DialogHeader>
                 <DialogTitle>All Sessions</DialogTitle>
+                <RefreshButton
+                  onRefresh={refresh}
+                  size="sm"
+                  variant="outline"
+                />
               </DialogHeader>
 
               <input
@@ -227,7 +231,7 @@ export function CarouselDemo() {
       )}
 
       {/* Carousel */}
-      <Carousel className="w-full flex flex-col items-center mt-6 gap-8">
+      <Carousel className="w-full max-w-4xl flex flex-col items-center mt-6 gap-8">
         <div className="w-full overflow-hidden px-6">
           <CarouselContent className="flex gap-6 snap-x snap-mandatory">
             {sessionsWithDateTime.slice(0, 7).map((session, index) => (

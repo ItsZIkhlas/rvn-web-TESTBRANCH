@@ -27,17 +27,18 @@ export const metadata: Metadata = {
 
 const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
     return (
-        // ? https://github.com/pacocoursey/next-themes?tab=readme-ov-file#with-app
-        // ? https://react.dev/reference/react-dom/client/hydrateRoot#suppressing-unavoidable-hydration-mismatch-errors
-        <html suppressHydrationWarning lang='en'>
-            <body
-                className={`${geistSans.variable} ${geistMono.variable} bg-background text-foreground overscroll-none antialiased`}>
-                <ThemeProvider attribute='class'>
-                    {children}
-                    <Toaster />
-                </ThemeProvider>
-            </body>
-        </html>
+      // ? https://github.com/pacocoursey/next-themes?tab=readme-ov-file#with-app
+      // ? https://react.dev/reference/react-dom/client/hydrateRoot#suppressing-unavoidable-hydration-mismatch-errors
+      <html suppressHydrationWarning lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} bg-background text-foreground overscroll-none antialiased`}
+        >
+          <ThemeProvider attribute="class">
+            {children}
+            <Toaster />
+          </ThemeProvider>
+        </body>
+      </html>
     );
 };
 

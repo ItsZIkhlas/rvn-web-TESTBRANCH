@@ -1,4 +1,6 @@
-import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
+import React, { useEffect, useState } from "react";
+import { useSessionTrends } from "@/hooks/useTrends";
+import { useSessions } from "@/hooks/useSessions";
 import { Badge } from "@/registry/new-york-v4/ui/badge";
 import {
   Card,
@@ -8,166 +10,130 @@ import {
   CardHeader,
   CardTitle,
 } from "@/registry/new-york-v4/ui/card";
+import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
 
-interface Session {
-  id: string;
-  average_lap: string; // e.g. "00:02:45.1"
-  fastest_lap: string; // e.g. "00:01:23.5"
-  total_laps: number;
-  avg_lean_angle: number;
-  max_lean_angle: number;
-  top_speed: number;
-  track_name: string;
-  track_temperature: string;
-  created_at: string; // e.g. "2024-09-29 14:59:58.6+00"
-}
+export function SectionCards() {
+  const { trends, loading, error, fetchTrends } = useSessionTrends();
+  const { sessions } = useSessions();
+  const [trackName, setTrackName] = useState("Track Unknown");
 
-function timeToSeconds(lap: string): number {
-  const [minStr, secStr] = lap.split(":");
-  const min = parseInt(minStr, 10);
-  const sec = parseFloat(secStr);
-  return min * 60 + sec;
-}
+  useEffect(() => {
+    fetchTrends();
+  }, []);
 
-function formatDateTime(createdOn: string): { date: string; time: string } {
-  const dateObj = new Date(createdOn);
-  // Format date as YYYY-MM-DD
-  const date = dateObj.toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
-  // Format time as HH:MM:SS
-  const time = dateObj.toLocaleTimeString(undefined, {
-    hour12: false,
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  });
-  return { date, time };
-}
+  useEffect(() => {
+    if (!trends || !sessions || sessions.length === 0) return;
 
-export function SectionCards({ sessions }: { sessions: Session[] }) {
-  if (sessions.length < 2) return null;
+    const trendTrackId = trends.track_id;
+    if (trendTrackId) {
+      const matchedSession = sessions.find(
+        (session) => session.track_id === trendTrackId
+      );
+      if (matchedSession && matchedSession.track_name) {
+        setTrackName(matchedSession.track_name);
+      } else {
+        setTrackName("Track Unknown");
+      }
+    }
+  }, [trends, sessions]);
 
-  // Find session with fastest lap
-  const fastest = sessions.reduce((prev: Session, curr: Session) =>
-    timeToSeconds(curr.fastest_lap) < timeToSeconds(prev.fastest_lap)
-      ? curr
-      : prev
-  );
+  if (loading) return <p>Loading trends...</p>;
+  if (error) return <p className="text-destructive">Error: {error}</p>;
+  if (!trends) return <p>No trends found</p>;
 
-  // Find session with highest top speed
-  const topSpeedSession = sessions.reduce((prev: Session, curr: Session) =>
-    curr.top_speed > prev.top_speed ? curr : prev
-  );
+  // Extract the nested metrics JSON
+  const metrics = trends.trends;
 
-  // Latest and second latest sessions (assuming sessions are sorted by created_at ascending)
-  const latest = sessions[sessions.length - 1];
-  const secondLatest = sessions[sessions.length - 2];
+  function findKeyEndingWith(suffix: string) {
+    if (!metrics) return undefined;
+    return Object.keys(metrics).find((key) => key.endsWith(suffix));
+  }
 
-  const latestLap = timeToSeconds(latest.fastest_lap);
-  const prevLap = timeToSeconds(secondLatest.fastest_lap);
-  const lapDelta = latestLap - prevLap;
-  const improving = lapDelta < 0;
+  const maxLeanKey = findKeyEndingWith("max_lean_per_session");
+  const avgLeanKey = findKeyEndingWith("avg_lean_per_session");
+  const bestLapKey = findKeyEndingWith("best_lap_s_per_session");
+  const lapStdKey = findKeyEndingWith("lap_time_std_per_session");
 
-  const fastestDateTime = formatDateTime(fastest.created_at);
-  const topSpeedDateTime = formatDateTime(topSpeedSession.created_at);
-  const latestDateTime = formatDateTime(latest.created_at);
-  const secondLatestDateTime = formatDateTime(secondLatest.created_at);
+  const maxLeanDelta = maxLeanKey ? metrics[maxLeanKey] : 0;
+  const avgLeanDelta = avgLeanKey ? metrics[avgLeanKey] : 0;
+  const bestLapDelta = bestLapKey ? metrics[bestLapKey] : 0;
+  const lapStdDelta = lapStdKey ? metrics[lapStdKey] : null;
+  const bestLapDeltaSec = bestLapDelta !== undefined ? -bestLapDelta : 0;
+
+  function formatDelta(value: number, unit = "") {
+    const sign = value > 0 ? "+" : "";
+    return `${sign}${value.toFixed(2)}${unit}`;
+  }
+
+  const cards = [
+    {
+      title: "Max Lean",
+      delta: formatDelta(maxLeanDelta, "°"),
+      feedback:
+        maxLeanDelta > 0
+          ? "Great job, you're getting more confident."
+          : "Try to be more confident in your leans.",
+      track: trackName,
+      positive: maxLeanDelta > 0,
+    },
+    {
+      title: "Average Lean",
+      delta: formatDelta(avgLeanDelta, "°"),
+      feedback:
+        avgLeanDelta > 0
+          ? "You're getting more consistent and confident."
+          : "Work on lean consistency.",
+      track: trackName,
+      positive: avgLeanDelta > 0,
+    },
+    {
+      title: "Fastest Lap Times",
+      delta: formatDelta(bestLapDeltaSec, "s"),
+      feedback:
+        bestLapDeltaSec > 0
+          ? "Great job, you're getting faster each session."
+          : "Your lap times are slower. Keep pushing!",
+      track: trackName,
+      positive: bestLapDeltaSec > 0,
+    },
+    {
+      title: "Lap Time Std",
+      delta: lapStdDelta !== null ? formatDelta(lapStdDelta) : "N/A",
+      feedback:
+        "Your lap times are not consistent. Look at insights for ways to improve.",
+      track: trackName,
+      positive: lapStdDelta !== null && lapStdDelta < 0,
+    },
+  ];
 
   return (
-    <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
-      {/* Fastest Lap */}
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Fastest Lap</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {fastest.fastest_lap.startsWith("00:")
-              ? fastest.fastest_lap.slice(3)
-              : fastest.fastest_lap}
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">{fastest.track_name}</Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Fastest lap recorded
-          </div>
-          <div className="text-muted-foreground">
-            {fastestDateTime.date} {fastestDateTime.time}
-          </div>
-        </CardFooter>
-      </Card>
+    <div className="grid grid-cols-1 gap-4 px-4 lg:grid-cols-4">
+      {cards.map(({ title, delta, feedback, track, positive }) => {
+        const Icon = positive ? IconTrendingUp : IconTrendingDown;
+        const colorClass = positive
+          ? "text-green-foreground"
+          : "text-destructive";
 
-      {/* Top Speed */}
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Top Speed</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {topSpeedSession.top_speed}
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">{topSpeedSession.track_name}</Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Highest recorded top speed
-          </div>
-          <div className="text-muted-foreground">
-            {topSpeedDateTime.date} {topSpeedDateTime.time}
-          </div>
-        </CardFooter>
-      </Card>
-
-      {/* Average Lean Angle */}
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Average Lean Angle</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {latest.avg_lean_angle}°
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">{latest.track_name}</Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            From most recent session
-          </div>
-          <div className="text-muted-foreground">
-            {latestDateTime.date} {latestDateTime.time}
-          </div>
-        </CardFooter>
-      </Card>
-
-      {/* Performance Change */}
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Performance Trend</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {improving
-              ? `-${Math.abs(lapDelta).toFixed(2)}s faster`
-              : `+${Math.abs(lapDelta).toFixed(2)}s slower`}
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline" className="flex items-center gap-1">
-              {improving ? <IconTrendingUp /> : <IconTrendingDown />}
-              {improving ? "Improving" : "Slowing"}
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Compared to previous session
-          </div>
-          <div className="text-muted-foreground">
-            {secondLatest.track_name} → {latest.track_name}
-          </div>
-        </CardFooter>
-      </Card>
+        return (
+          <Card key={title} className="p-4 rounded-2xl shadow">
+            <CardHeader>
+              <CardDescription>{title}</CardDescription>
+              <CardTitle className={`text-2xl font-semibold`}>
+                {delta}
+              </CardTitle>
+              <CardAction>
+                <Badge variant="outline">{track}</Badge>
+              </CardAction>
+            </CardHeader>
+            <CardFooter className="flex-col items-start gap-1.5 text-sm">
+              <div className={`flex items-center gap-1 font-medium`}>
+                {delta !== "N/A" && <Icon size={18} />}
+                {feedback}
+              </div>
+            </CardFooter>
+          </Card>
+        );
+      })}
     </div>
   );
 }

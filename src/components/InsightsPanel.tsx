@@ -60,7 +60,7 @@ export default function VerticalInsightsCarousel() {
       <h2 className="text-white text-2xl font-semibold mb-6">
         Recent Insights
       </h2>
-      <div className="h-[450px]">
+      <div className="h-[495px]">
         <ScrollArea className="h-full pr-2">
           <div className="flex flex-col gap-4">
             {insights.map((insight) => (

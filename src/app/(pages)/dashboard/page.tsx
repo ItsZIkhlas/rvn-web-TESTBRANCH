@@ -6,6 +6,8 @@ import { SiteHeader } from "@/components/site-header";
 import { CarouselDemo } from "@/components/carousel-demo";
 import { useSessions } from "@/hooks/useSessions";
 import { useInsights } from "@/hooks/useInsights";
+import { RefreshButton } from "@/components/RefreshBtn";
+import { useSessionTrends } from "@/hooks/useTrends";
 import {
   SidebarInset,
   SidebarProvider,
@@ -14,6 +16,7 @@ import InsightsPanel from "@/components/InsightsPanel";
 
 export default function Page() {
   const { sessions } = useSessions();
+  const { fetchTrends } = useSessionTrends();
 
   return (
     <SidebarProvider
@@ -49,11 +52,17 @@ export default function Page() {
                 </div>
               </div>
               {/* Section Cards */}
-              <div className="bg-[linear-gradient(to_bottom,rgba(0,0,0,0.6)_20%,rgba(38,38,38,0.2)_80%,rgba(255,255,255,0.05)_100%)] border border-grey-200 rounded-xl p-4 rounded-lg mb-3">
-                <h2 className="text-xl font-semibold text-white mb-3">
-                  Overall Stats
-                </h2>
-                <SectionCards sessions={sessions} />
+              <div className="bg-[linear-gradient(to_bottom,rgba(0,0,0,0.6)_20%,rgba(38,38,38,0.2)_80%,rgba(255,255,255,0.05)_100%)] border border-grey-200 rounded-xl p-4 rounded-lg mb-3 @container/main mt-3">
+                <div className="flex flex-row items-center justify-between">
+                  <h2 className="text-xl font-semibold text-white mb-3">
+                    Recent Detected Trends
+                  </h2>
+                  <RefreshButton onRefresh={fetchTrends} />
+                </div>
+                <p className="text-gray-400 mb-4">
+                  Here are your recent session over session trends
+                </p>
+                <SectionCards />
               </div>
             </div>
           </div>

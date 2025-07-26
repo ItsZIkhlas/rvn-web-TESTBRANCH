@@ -7,9 +7,10 @@ import { useSessions } from "@/hooks/useSessions";
 
 interface Props {
   siteHeader: string;
+  onRefresh: () => void;
 }
 
-export function SiteHeader({ siteHeader }: Props) {
+export function SiteHeader({ siteHeader, onRefresh }: Props) {
   const { sessions, refresh } = useSessions();
   return (
     <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -22,7 +23,7 @@ export function SiteHeader({ siteHeader }: Props) {
           />
           <h1 className="text-base font-medium">{siteHeader}</h1>
         </div>
-        <RefreshButton onRefresh={refresh} />
+        <RefreshButton onRefresh={onRefresh} />
       </div>
     </header>
   );

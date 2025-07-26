@@ -16,27 +16,32 @@ export type Insight = {
   };
 };
 
-const fetchInsights = async (): Promise<Insight[]> => {
-  const { data, error } = await supabase
-    .from("insights")
-    .select(
+export function useInsights(sessionId?: string) {
+  const fetchInsights = async (): Promise<Insight[]> => {
+    let query = supabase
+      .from("insights")
+      .select(
+        `
+        *,
+        sessions (
+          track_name
+        )
       `
-      *,
-      sessions (
-        track_name
       )
-    `
-    )
-    .eq("deleted", false)
-    .order("created_at", { ascending: false });
+      .eq("deleted", false)
+      .order("created_at", { ascending: false });
 
-  if (error) throw error;
-  return data as Insight[];
-};
+    if (sessionId) {
+      query = query.eq("session_id", sessionId);
+    }
 
-export function useInsights() {
+    const { data, error } = await query;
+    if (error) throw error;
+    return data as Insight[];
+  };
+
   const { data, error, isLoading, mutate } = useSWR<Insight[]>(
-    "insights",
+    sessionId ? `insights-${sessionId}` : "insights",
     fetchInsights,
     {
       revalidateOnFocus: false,
@@ -51,3 +56,4 @@ export function useInsights() {
     insightRefresh: () => mutate(),
   };
 }
+

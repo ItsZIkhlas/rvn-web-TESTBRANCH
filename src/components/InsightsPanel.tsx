@@ -59,7 +59,7 @@ export default function VerticalInsightsCarousel({
   }
 
   return (
-    <div className="rounded-xl bg-gradient-to-b from-black/60 via-zinc-900/20 to-white/5 border border-gray-200 p-6 md:block md:max-w-4xl">
+    <div className="rounded-xl p-6 md:block md:max-w-4xl">
       <h2 className="text-white text-2xl font-semibold mb-6">
         Session Insights
       </h2>

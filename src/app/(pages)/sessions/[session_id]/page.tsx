@@ -12,6 +12,7 @@ import { SiteHeader } from "@/components/site-header";
 import {
   SidebarInset,
   SidebarProvider,
+  SidebarTrigger,
 } from "@/registry/new-york-v4/ui/sidebar";
 import {
   Tabs,
@@ -22,6 +23,7 @@ import {
 import { Card, CardContent } from "@/registry/new-york-v4/ui/card";
 import { MapPin } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/registry/new-york-v4/ui/dialog";
+import { RefreshButton } from "@/components/RefreshBtn";
 
 interface Session {
   id: string;
@@ -68,17 +70,13 @@ export default function SessionDetailPage() {
   const [corners, setCorners] = useState<Corner[]>([]);
   const [loadingCorners, setLoadingCorners] = useState(false);
   const [selectedLap, setSelectedLap] = useState<Lap | null>(null);
+  
 
   const handleRefresh = async () => {
     if (!session_id) return;
 
     let latestSession: Session | null = null;
 
-    const local = getSessionById(session_id as string);
-    if (local) {
-      setSession(local as Session);
-      latestSession = local as Session;
-    } else {
       const { data: sessionData, error: sessionError } = await supabase
         .from("sessions")
         .select("*")
@@ -93,7 +91,6 @@ export default function SessionDetailPage() {
         setSession(sessionData);
         latestSession = sessionData;
       }
-    }
 
     // Fetch laps
     const { data: lapsData, error: lapsError } = await supabase
@@ -157,33 +154,32 @@ export default function SessionDetailPage() {
     >
       <AppSidebar variant="inset" />
       <SidebarInset>
-        <SiteHeader siteHeader="Session Details" onRefresh={handleRefresh} />
-
         <div className="px-4 py-6 sm:px-6 lg:px-12 max-w-screen-2xl mx-auto w-full text-white">
           <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="flex flex-wrap gap-2 mb-4">
-              <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="sectors">Sectors</TabsTrigger>
-              <TabsTrigger value="charts">Charts</TabsTrigger>
-            </TabsList>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex jusitfy-center items-center gap-4">
+                <SidebarTrigger className="-ml-1" />
+                <TabsList className="flex gap-2">
+                  <TabsTrigger value="overview">Overview</TabsTrigger>
+                  <TabsTrigger value="sectors">Sectors</TabsTrigger>
+                  <TabsTrigger value="charts">Charts</TabsTrigger>
+                </TabsList>
+              </div>
+              <RefreshButton onRefresh={handleRefresh} variant="default" />
+            </div>
 
             <TabsContent value="overview">
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                 {/* LEFT: Track Map */}
-                <Card className="w-full">
-                  <h3 className="text-xl font-semibold ml-4 mt-4">Track Map</h3>
-                  <CardContent className="pt-4">
-                    {loadingCorners ? (
-                      <p className="text-white p-4">Loading map data...</p>
-                    ) : (
-                      <MapBoxMap
-                        latitude={session.track_latitude}
-                        longitude={session.track_longitude}
-                        corners={corners ?? []}
-                      />
-                    )}
-                  </CardContent>
-                </Card>
+                {loadingCorners ? (
+                  <p className="text-white p-4">Loading map data...</p>
+                ) : (
+                  <MapBoxMap
+                    latitude={session.track_latitude}
+                    longitude={session.track_longitude}
+                    corners={corners ?? []}
+                  />
+                )}
 
                 {/* RIGHT: Session Summary + Table */}
                 <div className="flex flex-col gap-6 w-full">
@@ -217,9 +213,9 @@ export default function SessionDetailPage() {
                       </div>
 
                       {/* MID: Stats */}
-                      <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-center">
-                        <div className="text-center w-full md:w-auto">
-                          <h1 className="text-5xl font-bold text-white">
+                      <div className="flex flex-row justify-around gap-8 md:gap-12 items-center">
+                        <div className="text-center w-auto">
+                          <h1 className="text-6xl font-bold text-white">
                             {session.fastest_lap.startsWith("00:")
                               ? session.fastest_lap.slice(3)
                               : session.fastest_lap}
@@ -229,9 +225,9 @@ export default function SessionDetailPage() {
                           </p>
                         </div>
 
-                        <div className="flex-1 space-y-4 flex flex-col items-center ">
+                        <div className="space-y-4 flex flex-col items-center ">
                           {/* Violet Box */}
-                          <div className="border-2 border-violet-500 text-violet-500 rounded-xl p-3 text-center w-full max-w-xs">
+                          <div className="border-2 border-violet-500 text-violet-500 rounded-xl p-3 text-center w-full max-w-md">
                             <p className="text-lg font-semibold">
                               {session.average_lap.startsWith("00:")
                                 ? session.average_lap.slice(3)

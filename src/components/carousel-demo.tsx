@@ -77,7 +77,7 @@ function SessionListItem({ session }: { session: Session }) {
 export function SessionCard({ session }: { session: Session }) {
   return (
     <Link href={`/sessions/${session.id}`}>
-      <Card className="w-full">
+      <Card className="w-xl">
         <CardContent className="p-6 space-y-6">
           {/* TOP: Track name + date/time */}
           <div className="flex flex-col sm:flex-row justify-between border-b border-white/20 pb-4 gap-2">
@@ -111,7 +111,7 @@ export function SessionCard({ session }: { session: Session }) {
             </div>
 
             <div className="flex-1 space-y-4">
-              <div className="border-2 border-violet-500 text-violet-500 rounded-xl p-3 text-center max-w-xs ml-auto">
+              <div className="border-2 border-blue-500 text-blue-500 rounded-xl p-3 text-center max-w-xs ml-auto">
                 <p className="text-lg font-semibold">
                   {session.average_lap.startsWith("00:")
                     ? session.average_lap.slice(3)
@@ -165,12 +165,21 @@ export function SessionCard({ session }: { session: Session }) {
     </Link>
   );
 }
+interface CarouselDemoProps {
+  sessions: Session[];
+  isLoading?: boolean;
+  error?: string | null;
+  refresh?: () => void;
+}
 
-export function CarouselDemo() {
-  const { sessions, isLoading, error, refresh } = useSessions();
+export function CarouselDemo({
+  sessions,
+  isLoading = false,
+  error = null,
+  refresh,
+}: CarouselDemoProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Optional: Add date/time derived fields if you want to display them
   const sessionsWithDateTime = sessions.map((session) => {
     if (session.created_at) {
       const d = new Date(session.created_at);
@@ -191,7 +200,7 @@ export function CarouselDemo() {
   );
 
   return (
-    <div className="w-full max-w-4xl rounded-2xl shadow-md p-6 border border-grey-200 rounded-xl shadow-sm transition hover:shadow-md bg-[linear-gradient(to_bottom,rgba(0,0,0,0.6)_20%,rgba(38,38,38,0.2)_80%,rgba(255,255,255,0.05)_100%)] xl:flex xl:flex-col xl:justify-center">
+    <div className="w-full max-w-4xl rounded-2xl shadow-md p-6 rounded-xl shadow-sm transition hover:shadow-md xl:flex xl:flex-col xl:justify-center">
       {/* Header */}
       <div className="flex items-center justify-between mb-2">
         <h2 className="text-xl font-semibold text-white">Recent Sessions</h2>
@@ -207,11 +216,13 @@ export function CarouselDemo() {
             <DialogContent className="max-w-3xl max-h-[80vh] overflow-auto">
               <DialogHeader>
                 <DialogTitle>All Sessions</DialogTitle>
-                <RefreshButton
-                  onRefresh={refresh}
-                  size="sm"
-                  variant="outline"
-                />
+                {refresh && (
+                  <RefreshButton
+                    onRefresh={refresh}
+                    size="sm"
+                    variant="outline"
+                  />
+                )}
               </DialogHeader>
 
               <input
@@ -255,13 +266,16 @@ export function CarouselDemo() {
       )}
 
       {/* Carousel */}
-      <Carousel className="w-full max-w-4xl flex flex-col items-center mt-6 gap-8">
-        <div className="w-full overflow-x-auto px-6">
-          <CarouselContent className="flex gap-6 snap-x snap-mandatory justify-start items-center">
+      <Carousel className="w-full max-w-3xl mt-6 flex flex-col items-center gap-8 overflow-visible">
+        <div className="w-full px-4">
+          <CarouselContent
+            className="flex items-center space-x-7 px-6"
+            style={{ scrollSnapType: "x mandatory" }}
+          >
             {sessionsWithDateTime.slice(0, 7).map((session, index) => (
               <CarouselItem
                 key={session.id || index}
-                className="flex-shrink-0 snap-start w-72 flex justify-center"
+                className="basis-[85%] shrink-0 grow-0 scroll-snap-align-center"
               >
                 <SessionCard session={session} />
               </CarouselItem>

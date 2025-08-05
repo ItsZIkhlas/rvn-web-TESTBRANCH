@@ -13,7 +13,8 @@ import {
 } from "@/registry/new-york-v4/ui/sidebar";
 import InsightsPanel from "@/components/InsightsPanel";
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { createSupabaseClientWithAuth } from "@/lib/supabase"; // updated import
+import { useAuth, useUser } from "@clerk/nextjs";
 
 interface Session {
   id: string;
@@ -34,8 +35,19 @@ interface Session {
 export default function Page() {
   const { fetchTrends } = useSessionTrends();
   const [sessions, setSessions] = useState<Session[]>([]);
+  const { getToken } = useAuth();
+  const { user } = useUser();
 
   const handleRefresh = async () => {
+    const token = await getToken({ template: "supabase" });
+    if (!token) {
+      console.error("No Clerk token found");
+      setSessions([]);
+      return;
+    }
+
+    const supabase = createSupabaseClientWithAuth(token);
+
     const { data, error } = await supabase
       .from("sessions")
       .select("*")
@@ -71,7 +83,7 @@ export default function Page() {
               <SidebarTrigger className="-ml-1" />
               <div className="">
                 <h1 className="text-2xl md:text-3xl font-bold">
-                  Welcome Zayd Asif
+                  Welcome {user?.fullName}
                 </h1>
                 <p className="mt-2 text-base md:text-lg opacity-90">
                   Here’s an overview of your recent sessions and insights.

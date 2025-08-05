@@ -1,5 +1,8 @@
+"use client";
+
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { createSupabaseClientWithAuth } from "@/lib/supabase"; // your function to create Supabase client with auth token
+import { useAuth } from "@clerk/nextjs";
 
 interface CornerPoint {
   lat: number;
@@ -9,30 +12,40 @@ interface CornerPoint {
 export function useTrackCorners(trackId: string | null) {
   const [corners, setCorners] = useState<CornerPoint[] | null>(null);
   const [loading, setLoading] = useState(true);
+  const { getToken } = useAuth();
 
   useEffect(() => {
     if (!trackId) return;
 
     const fetchCorners = async () => {
       setLoading(true);
-      const { data, error } = await supabase
-        .from("track_configurations")
-        .select("corners")
-        .eq("track_id", trackId)
-        .single();
+      try {
+        const token = await getToken({ template: "supabase" });
+        if (!token) throw new Error("No auth token found");
 
-      if (error) {
-        console.error("Error fetching track corners:", error);
+        const supabase = createSupabaseClientWithAuth(token);
+
+        const { data, error } = await supabase
+          .from("track_configurations")
+          .select("corners")
+          .eq("track_id", trackId)
+          .single();
+
+        if (error) {
+          console.error("Error fetching track corners:", error);
+          setCorners(null);
+        } else {
+          setCorners(data?.corners || []);
+        }
+      } catch (error) {
+        console.error(error);
         setCorners(null);
-      } else {
-        setCorners(data?.corners || []);
       }
-
       setLoading(false);
     };
 
     fetchCorners();
-  }, [trackId]);
+  }, [trackId, getToken]);
 
   return { corners, loading };
 }

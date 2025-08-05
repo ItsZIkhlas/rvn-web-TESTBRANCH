@@ -76,7 +76,6 @@ function SessionListItem({ session }: { session: Session }) {
 
 export function SessionCard({ session }: { session: Session }) {
   return (
-    <Link href={`/sessions/${session.id}`}>
       <Card className="w-xl">
         <CardContent className="p-6 space-y-6">
           {/* TOP: Track name + date/time */}
@@ -110,8 +109,8 @@ export function SessionCard({ session }: { session: Session }) {
               <p className="text-orange-500 mt-1 text-lg">Fastest Lap</p>
             </div>
 
-            <div className="flex-1 space-y-4">
-              <div className="border-2 border-blue-500 text-blue-500 rounded-xl p-3 text-center max-w-xs ml-auto">
+            <div className="flex-1 space-y-4 flex flex-col items-end justify-between mr-4">
+              <div className="border-2 border-blue-500 text-blue-500 rounded-xl py-3 px-8 text-center">
                 <p className="text-lg font-semibold">
                   {session.average_lap.startsWith("00:")
                     ? session.average_lap.slice(3)
@@ -120,7 +119,7 @@ export function SessionCard({ session }: { session: Session }) {
                 <p className="text-sm font-light">Average Lap</p>
               </div>
 
-              <div className="flex justify-around text-center ml-[10px] gap-2">
+              <div className="flex justify-around text-center ml-[10px] gap-4">
                 <div>
                   <p className="text-white text-lg font-semibold">
                     {session.top_speed} mph
@@ -162,7 +161,6 @@ export function SessionCard({ session }: { session: Session }) {
           </div>
         </CardContent>
       </Card>
-    </Link>
   );
 }
 interface CarouselDemoProps {
@@ -277,7 +275,9 @@ export function CarouselDemo({
                 key={session.id || index}
                 className="basis-[85%] shrink-0 grow-0 scroll-snap-align-center"
               >
-                <SessionCard session={session} />
+                <Link href={`/sessions/${session.id}`}>
+                  <SessionCard session={session} />
+                </Link>
               </CarouselItem>
             ))}
           </CarouselContent>

@@ -31,14 +31,10 @@ export default function MapBoxMap({
     });
 
     // Add a marker at the session location
-    new mapboxgl.Marker().setLngLat([longitude, latitude]).addTo(map);
+    // new mapboxgl.Marker().setLngLat([longitude, latitude]).addTo(map);
 
-    // If corner points exist, draw a cyan line
     if (corners.length > 1) {
-      // Map corners to [lon, lat]
       const coordinates = corners.map((point) => [point.lon, point.lat]);
-
-      // Close the polygon loop by adding the first point at the end
       coordinates.push(coordinates[0]);
 
       map.on("load", () => {
@@ -51,7 +47,7 @@ export default function MapBoxMap({
                 type: "LineString",
                 coordinates,
               },
-              properties: {}, // required to avoid type issues
+              properties: {}, 
             },
           });
 

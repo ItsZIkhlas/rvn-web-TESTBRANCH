@@ -36,7 +36,7 @@ const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
   return (
     <html suppressHydrationWarning lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-background text-foreground overscroll-none antialiased overflow-hidden`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-background text-foreground overscroll-none antialiased`}
       >
         <ClerkProvider>
           <ThemeProvider attribute="class">

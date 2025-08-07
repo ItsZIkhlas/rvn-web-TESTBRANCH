@@ -7,7 +7,7 @@ import { useSessions } from "@/hooks/useSessions";
 
 interface Props {
   siteHeader: string;
-  onRefresh: () => void;
+  onRefresh?: () => void;
 }
 
 export function SiteHeader({ siteHeader, onRefresh }: Props) {

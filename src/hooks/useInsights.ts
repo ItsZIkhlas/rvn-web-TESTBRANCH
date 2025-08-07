@@ -8,7 +8,10 @@ export type Insight = {
   id: string;
   user_id: string;
   session_id: string;
-  report: string;
+  overview: string;
+  tips: string;
+  lap_over_lap: string;
+  session_over_session: string;
   viewed: boolean;
   created_at: string;
   deleted: boolean;

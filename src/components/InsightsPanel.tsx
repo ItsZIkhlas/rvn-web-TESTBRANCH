@@ -95,8 +95,8 @@ export default function VerticalInsightsCarousel({
                   </CardHeader>
 
                   <CardContent>
-                    <p className="text-sm text-muted-foreground whitespace-pre-wrap line-clamp-5">
-                      {insight.report}
+                    <p className="text-sm text-muted-foreground whitespace-pre-wrap line-clamp-4">
+                      {insight.overview}
                     </p>
                   </CardContent>
 
@@ -126,7 +126,12 @@ export default function VerticalInsightsCarousel({
                           </DialogTitle>
                         </DialogHeader>
                         <div className="mt-2 max-h-[400px] overflow-y-auto text-sm whitespace-pre-wrap">
-                          <p>{insight.report}</p>
+                          <h1 className="text-lg font-semibold text-white mb-2">Overview:</h1>
+                          <p>{insight.overview}</p>
+                        </div>
+                        <div className="mt-2 max-h-[400px] overflow-y-auto text-sm whitespace-pre-wrap">
+                          <h1 className="text-lg font-semibold text-white mb-2">Tips:</h1>
+                          <p className="text-sm text-gray-300">Yet to be added.......</p>
                         </div>
                       </DialogContent>
                     </Dialog>

@@ -2,7 +2,7 @@
 
 import useSWR from "swr";
 import { createSupabaseClientWithAuth } from "@/lib/supabase";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 
 export type Insight = {
   id: string;
@@ -22,6 +22,7 @@ export type Insight = {
 
 export function useInsights(sessionId?: string) {
   const { getToken } = useAuth();
+  const { user } = useUser();
 
   const fetchInsights = async (): Promise<Insight[]> => {
     const token = await getToken({ template: "supabase" });
@@ -40,6 +41,7 @@ export function useInsights(sessionId?: string) {
       `
       )
       .eq("deleted", false)
+      .eq("user_id", user?.id)
       .order("created_at", { ascending: false });
 
     if (sessionId) {

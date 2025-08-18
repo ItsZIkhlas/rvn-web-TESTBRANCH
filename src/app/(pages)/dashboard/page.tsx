@@ -51,7 +51,8 @@ export default function Page() {
     const { data, error } = await supabase
       .from("sessions")
       .select("*")
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: false })
+      .eq("user_id", user?.id)
 
     if (error) {
       console.error("Error fetching sessions:", error);

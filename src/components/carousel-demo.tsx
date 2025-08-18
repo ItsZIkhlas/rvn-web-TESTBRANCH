@@ -76,91 +76,91 @@ function SessionListItem({ session }: { session: Session }) {
 
 export function SessionCard({ session }: { session: Session }) {
   return (
-      <Card className="w-xl">
-        <CardContent className="p-6 space-y-6">
-          {/* TOP: Track name + date/time */}
-          <div className="flex flex-col sm:flex-row justify-between border-b border-white/20 pb-4 gap-2">
-            <div className="flex items-center gap-2">
-              <MapPin className="w-5 h-5 text-orange-500" />
-              <p className="text-sm sm:text-base text-white/80 truncate">
-                {session.track_name}
-              </p>
-            </div>
-            <div className="flex gap-2 text-sm text-white/60">
-              <p>{session.created_at.slice(0, 10)}</p>
-              <p>
-                {new Date(session.created_at).toLocaleTimeString("en-US", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  hour12: true,
-                })}
-              </p>
-            </div>
+    <Card className="w-xl">
+      <CardContent className="p-6 space-y-6">
+        {/* TOP: Track name + date/time */}
+        <div className="flex flex-col sm:flex-row justify-between border-b border-white/20 pb-4 gap-2">
+          <div className="flex items-center gap-2">
+            <MapPin className="w-5 h-5 text-orange-500" />
+            <p className="text-sm sm:text-base text-white/80 truncate">
+              {session.track_name}
+            </p>
+          </div>
+          <div className="flex gap-2 text-sm text-white/60">
+            <p>{session.created_at.slice(0, 10)}</p>
+            <p>
+              {new Date(session.created_at).toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true,
+              })}
+            </p>
+          </div>
+        </div>
+
+        {/* MID: Stats */}
+        <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-center">
+          <div className="text-center w-full md:w-auto">
+            <h1 className="text-5xl font-bold text-white">
+              {session.fastest_lap.startsWith("00:")
+                ? session.fastest_lap.slice(3)
+                : session.fastest_lap}
+            </h1>
+            <p className="text-orange-500 mt-1 text-lg">Fastest Lap</p>
           </div>
 
-          {/* MID: Stats */}
-          <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-center">
-            <div className="text-center w-full md:w-auto">
-              <h1 className="text-5xl font-bold text-white">
-                {session.fastest_lap.startsWith("00:")
-                  ? session.fastest_lap.slice(3)
-                  : session.fastest_lap}
-              </h1>
-              <p className="text-orange-500 mt-1 text-lg">Fastest Lap</p>
+          <div className="flex-1 space-y-4 flex flex-col items-end justify-between mr-4">
+            <div className="border-2 border-blue-500 text-blue-500 rounded-xl py-3 px-8 text-center">
+              <p className="text-lg font-semibold">
+                {session.average_lap.startsWith("00:")
+                  ? session.average_lap.slice(3)
+                  : session.average_lap}
+              </p>
+              <p className="text-sm font-light">Average Lap</p>
             </div>
 
-            <div className="flex-1 space-y-4 flex flex-col items-end justify-between mr-4">
-              <div className="border-2 border-blue-500 text-blue-500 rounded-xl py-3 px-8 text-center">
-                <p className="text-lg font-semibold">
-                  {session.average_lap.startsWith("00:")
-                    ? session.average_lap.slice(3)
-                    : session.average_lap}
+            <div className="flex justify-around text-center ml-[10px] gap-4">
+              <div>
+                <p className="text-white text-lg font-semibold">
+                  {session.top_speed} mph
                 </p>
-                <p className="text-sm font-light">Average Lap</p>
+                <p className="text-white/60 text-sm">Top Speed</p>
               </div>
-
-              <div className="flex justify-around text-center ml-[10px] gap-4">
-                <div>
-                  <p className="text-white text-lg font-semibold">
-                    {session.top_speed} mph
-                  </p>
-                  <p className="text-white/60 text-sm">Top Speed</p>
-                </div>
-                <div>
-                  <p className="text-white text-lg font-semibold">
-                    {session.total_laps}
-                  </p>
-                  <p className="text-white/60 text-sm">Total Laps</p>
-                </div>
+              <div>
+                <p className="text-white text-lg font-semibold">
+                  {session.total_laps}
+                </p>
+                <p className="text-white/60 text-sm">Total Laps</p>
               </div>
             </div>
           </div>
+        </div>
 
-          {/* BOTTOM: Lean + Temp */}
-          <div className="flex flex-wrap justify-between gap-4 pt-4 border-t border-white/20">
-            <div className="flex gap-6 flex-wrap">
-              <div className="flex items-center gap-2">
-                <p className="text-white/70 text-sm">Max Lean</p>
-                <span className="text-white text-base font-semibold">
-                  {session.max_lean_angle}°
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <p className="text-white/70 text-sm">Avg Lean</p>
-                <span className="text-white text-base font-semibold">
-                  {session.avg_lean_angle}°
-                </span>
-              </div>
+        {/* BOTTOM: Lean + Temp */}
+        <div className="flex flex-wrap justify-between gap-4 pt-4 border-t border-white/20">
+          <div className="flex gap-6 flex-wrap">
+            <div className="flex items-center gap-2">
+              <p className="text-white/70 text-sm">Max Lean</p>
+              <span className="text-white text-base font-semibold">
+                {session.max_lean_angle}°
+              </span>
             </div>
             <div className="flex items-center gap-2">
-              <p className="text-white/70 text-sm">Track Temp</p>
-              <p className="text-white text-base font-semibold">
-                {session.track_temperature}
-              </p>
+              <p className="text-white/70 text-sm">Avg Lean</p>
+              <span className="text-white text-base font-semibold">
+                {session.avg_lean_angle}°
+              </span>
             </div>
           </div>
-        </CardContent>
-      </Card>
+          <div className="flex items-center gap-2">
+            <p className="text-white/70 text-sm">Track Temp</p>
+            <p className="text-white text-base font-semibold">
+              {session.track_temperature}
+            </p>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 interface CarouselDemoProps {

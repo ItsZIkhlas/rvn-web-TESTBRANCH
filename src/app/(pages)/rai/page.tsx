@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
-import { SiteHeader } from "@/components/site-header";
 import {
   SidebarInset,
   SidebarProvider,
@@ -15,6 +14,7 @@ import {
   SheetTrigger,
 } from "@/registry/new-york-v4/ui/sheet";
 import { Plus, History } from "lucide-react";
+import { DialogTitle } from "@/registry/new-york-v4/ui/dialog";
 
 interface Message {
   role: "user" | "ai";
@@ -40,11 +40,11 @@ export default function Page() {
     setTimeout(() => {
       const aiMessage: Message = {
         role: "ai",
-        content: `Simulated response to: "${userMessage.content}"`,
+        content: `🤖 Simulated AI response: "${userMessage.content}"`,
       };
       setMessages((prev) => [...prev, aiMessage]);
       setLoading(false);
-    }, 1000);
+    }, 800);
   };
 
   useEffect(() => {
@@ -62,34 +62,45 @@ export default function Page() {
     >
       <AppSidebar variant="inset" />
       <SidebarInset>
-        <div className="flex flex-col h-full max-h-screen bg-muted/70">
-          {/* Header Navigation */}
-          <div className="flex items-center justify-between px-6 py-4 border-b">
-            <h1 className="text-xl font-semibold">Chat Interface</h1>
+        <div className="flex flex-col h-full max-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 text-white">
+          {/* HEADER */}
+          <div className="flex items-center justify-between px-6 py-4 border-b border-cyan-500/20 bg-gray-900/70 backdrop-blur-xl shadow-lg">
+            <h1 className="text-xl font-bold bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 bg-clip-text text-transparent">
+              Chat Console
+            </h1>
             <div className="flex gap-2">
               <Button
                 variant="outline"
                 onClick={() => setMessages([])}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 border-cyan-400 text-cyan-300 hover:bg-cyan-400/10"
               >
                 <Plus className="w-4 h-4" /> New Chat
               </Button>
               <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
                 <SheetTrigger asChild>
-                  <Button variant="outline" className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    className="flex items-center gap-2 border-purple-400 text-purple-300 hover:bg-purple-400/10"
+                  >
                     <History className="w-4 h-4" /> History
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-[300px] p-4">
-                  <h2 className="text-lg font-semibold mb-4">Old Chats</h2>
+                <SheetContent
+                  side="right"
+                  className="w-[300px] p-4 bg-gray-900/90 backdrop-blur-md border-l border-purple-500/30 text-white"
+                >
+                  <DialogTitle className="text-lg font-semibold mb-4 text-purple-300">
+                    Old Chats
+                  </DialogTitle>
                   <ul className="space-y-2">
                     {messages.length === 0 ? (
-                      <li className="text-sm text-muted-foreground">
-                        No chats yet
-                      </li>
+                      <li className="text-sm text-gray-400">No chats yet</li>
                     ) : (
                       messages.map((m, i) => (
-                        <li key={i} className="text-sm truncate">
+                        <li
+                          key={i}
+                          className="text-sm truncate px-3 py-2 rounded-md bg-gray-800/50 hover:bg-gray-700/50 transition"
+                        >
                           {m.content}
                         </li>
                       ))
@@ -100,78 +111,73 @@ export default function Page() {
             </div>
           </div>
 
-          {/* Chat container */}
-          <div className="flex flex-col flex-1 overflow-hidden">
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto px-4 py-6">
-              <div className="max-w-6xl mx-auto flex flex-col gap-4">
-                {messages.map((msg, i) => (
-                  <div
-                    key={i}
-                    className={`flex items-end ${
-                      msg.role === "user" ? "justify-end" : "justify-start"
-                    }`}
-                  >
-                    {msg.role === "ai" && (
-                      <img
-                        src="/robot-pfp.png"
-                        alt="AI"
-                        className="w-8 h-8 rounded-full mr-2"
-                      />
-                    )}
-                    <div
-                      className={`max-w-[75%] px-5 py-3 rounded-2xl text-md leading-relaxed shadow-md transition-all duration-200 whitespace-pre-wrap break-words ${
-                        msg.role === "user"
-                          ? "bg-gradient-to-br from-blue-600 to-blue-700 text-white"
-                          : "bg-white border border-gray-200 text-gray-800"
-                      }`}
-                    >
-                      {msg.content}
-                    </div>
-                    {msg.role === "user" && (
-                      <img
-                        src={user?.imageUrl}
-                        alt="User"
-                        className="w-8 h-8 rounded-full ml-2"
-                      />
-                    )}
-                  </div>
-                ))}
-                <div ref={bottomRef} />
-              </div>
-            </div>
-
-            {/* Input */}
-            <div className="max-w-3xl mx-auto p-4 w-full">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  sendMessage();
-                }}
-                className="flex items-end gap-2 border border-gray-300 p-3 rounded-xl shadow-sm"
+          {/* MESSAGES */}
+          <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
+            {messages.map((msg, i) => (
+              <div
+                key={i}
+                className={`flex items-end ${
+                  msg.role === "user" ? "justify-end" : "justify-start"
+                }`}
               >
-                <textarea
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      sendMessage();
-                    }
-                  }}
-                  className="flex-1 resize-none rounded-md border-none focus:outline-none focus:ring-0 text-lg max-h-40 overflow-y-auto"
-                  placeholder="Type your message..."
-                  rows={5}
-                />
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="bg-black text-white px-4 py-2 rounded-md disabled:opacity-50 text-sm"
+                {msg.role === "ai" && (
+                  <img
+                    src="/robot-pfp.png"
+                    alt="AI"
+                    className="w-8 h-8 rounded-full mr-2 border border-cyan-400/50"
+                  />
+                )}
+                <div
+                  className={`max-w-[75%] px-5 py-3 rounded-2xl text-md leading-relaxed shadow-lg whitespace-pre-wrap break-words transition-all duration-300 ${
+                    msg.role === "user"
+                      ? "bg-gradient-to-br from-blue-600 to-cyan-500 text-white shadow-cyan-500/20"
+                      : "bg-gray-800/80 border border-gray-700 text-gray-100 shadow-purple-500/10"
+                  }`}
                 >
-                  {loading ? "Sending..." : "Send"}
-                </button>
-              </form>
-            </div>
+                  {msg.content}
+                </div>
+                {msg.role === "user" && (
+                  <img
+                    src={user?.imageUrl}
+                    alt="User"
+                    className="w-8 h-8 rounded-full ml-2 border border-blue-400/50"
+                  />
+                )}
+              </div>
+            ))}
+            <div ref={bottomRef} />
+          </div>
+
+          {/* INPUT */}
+          <div className="max-w-3xl mx-auto p-4 w-full">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                sendMessage();
+              }}
+              className="flex items-end gap-2 p-3 rounded-xl shadow-lg bg-gray-900/80 border border-gray-700 backdrop-blur-md"
+            >
+              <textarea
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                  }
+                }}
+                className="flex-1 resize-none rounded-md bg-transparent border-none focus:outline-none text-lg text-white placeholder-gray-400 max-h-40 overflow-y-auto"
+                placeholder="Type your message..."
+                rows={2}
+              />
+              <button
+                type="submit"
+                disabled={loading}
+                className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white px-4 py-2 rounded-md disabled:opacity-50 text-sm shadow-cyan-500/30"
+              >
+                {loading ? "Thinking..." : "Send"}
+              </button>
+            </form>
           </div>
         </div>
       </SidebarInset>

@@ -16,7 +16,6 @@ import {
   SheetTrigger,
 } from "@/registry/new-york-v4/ui/sheet";
 import { Plus, History } from "lucide-react";
-import { DialogContent, DialogTitle } from "@/registry/new-york-v4/ui/dialog";
 import { createSupabaseClientWithAuth } from "@/lib/supabase";
 
 interface Message {
@@ -39,45 +38,37 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const [prevConversations, setPrevConversations] = useState<Conversation[] | null>(null)
-  const [currentMessages, setCurrentMessages] = useState<Message[] | null>(null)
-  const [convoId, setConvoId] = useState<String>()
+  const [prevConversations, setPrevConversations] = useState<Conversation[] | null>(null);
+  const [convoId, setConvoId] = useState<string>();
   const { user } = useUser();
+  const { getToken } = useAuth();
 
-
-  const { getToken } = useAuth()
-
+  // fetch conversations
   const handleMsgData = async () => {
     const token = await getToken({ template: "supabase" });
-    if (!token) {
-      console.error("No Clerk token found");
-      return;
-    }
+    if (!token) return;
 
     const supabase = createSupabaseClientWithAuth(token);
 
-    const { data: prevConvos, error: prevConvosError } = await supabase
+    const { data: prevConvos, error } = await supabase
       .from("conversations")
       .select("*")
       .eq("user_id", user?.id);
 
-    if (prevConvosError) {
-      console.error("Error fetching conversations:", prevConvosError);
+    if (error) {
+      console.error("Error fetching conversations:", error);
       setPrevConversations(null);
     } else {
       setPrevConversations(prevConvos);
     }
   };
 
-
+  // fetch messages for a conversation
   const handleMessageRender = async (conversation_id: string) => {
     setConvoId(conversation_id);
 
     const token = await getToken({ template: "supabase" });
-    if (!token) {
-      console.error("No Clerk token found");
-      return;
-    }
+    if (!token) return;
 
     const supabase = createSupabaseClientWithAuth(token);
 
@@ -96,15 +87,14 @@ export default function Page() {
     }
   };
 
-
-
+  // send message locally + placeholder
   const sendMessage = () => {
     if (!input.trim()) return;
 
     const userMessage: Message = { role: "user", content: input };
-    setMessages((prev) => [...prev, userMessage]);
-
     const placeholder: Message = { role: "ai", content: "..." };
+
+    // add user msg + placeholder in one go
     setMessages((prev) => [...prev, userMessage, placeholder]);
 
     setInput("");
@@ -116,25 +106,55 @@ export default function Page() {
         content: `🤖 Simulated AI response: "${userMessage.content}"`,
       };
 
-      setMessages((prev) => [
-        ...prev.slice(0, -1),
-        aiMessage
-      ]);
-
+      // replace last placeholder with real ai msg
+      setMessages((prev) => [...prev.slice(0, -1), aiMessage]);
       setLoading(false);
     }, 800);
   };
 
-
+  // scroll to bottom when messages update
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // only fetch conversations once on mount
   useEffect(() => {
-    handleMsgData()
-  }, [messages])
+    handleMsgData();
+  }, []);
 
+  // 🔴 Realtime subscription (commented - costs money if left on)
+  /*
+  useEffect(() => {
+    if (!convoId) return;
 
+    (async () => {
+      const token = await getToken({ template: "supabase" });
+      if (!token) return;
+
+      const supabase = createSupabaseClientWithAuth(token);
+
+      const channel = supabase
+        .channel("messages")
+        .on(
+          "postgres_changes",
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "messages",
+            filter: `conversation_id=eq.${convoId}`,
+          },
+          (payload) => {
+            setMessages((prev) => [...prev, payload.new]);
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    })();
+  }, [convoId]);
+  */
 
   return (
     <SidebarProvider
@@ -186,8 +206,8 @@ export default function Page() {
                           key={i}
                           className="text-sm truncate px-3 py-2 rounded-md bg-gray-800/50 hover:bg-gray-700/50 transition cursor-pointer"
                           onClick={() => {
-                            handleMessageRender(m.id)
-                            setSheetOpen(false)
+                            handleMessageRender(m.id);
+                            setSheetOpen(false);
                           }}
                         >
                           {m.summary}
@@ -205,8 +225,7 @@ export default function Page() {
             {messages.map((msg, i) => (
               <div
                 key={i}
-                className={`flex items-end ${msg.role === "user" ? "justify-end" : "justify-start"
-                  }`}
+                className={`flex items-end ${msg.role === "user" ? "justify-end" : "justify-start"}`}
               >
                 {msg.role === "ai" && (
                   <img
@@ -219,7 +238,7 @@ export default function Page() {
                   className={`max-w-[75%] px-5 py-3 rounded-2xl shadow-lg whitespace-pre-wrap break-words transition-all duration-300 ${msg.role === "user"
                     ? "bg-gradient-to-br from-blue-600 to-cyan-500 text-white"
                     : msg.content === "..."
-                      ? "bg-gray-700/50 italic text-gray-400" // 👈 placeholder styling
+                      ? "bg-gray-700/50 italic text-gray-400"
                       : "bg-gray-800/80 border border-gray-700 text-gray-100"
                     }`}
                 >

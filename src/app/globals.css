@@ -199,3 +199,19 @@
     @apply bg-background text-foreground;
   }
 }
+
+.custom-btn {
+  @apply w-[130px] h-10 text-white font-medium cursor-pointer transition-all duration-[0.3s] ease-[ease] relative inline-block shadow-[inset_2px_2px_2px_0px_rgba(255,255,255,0.5),7px_7px_20px_0px_rgba(0,0,0,0.1),4px_4px_5px_0px_rgba(0,0,0,0.1)] px-[25px] py-2.5 rounded-[5px];
+  font-family: "Lato", sans-serif;
+  background: transparent;
+  outline: none;
+}
+.btn-9 {
+  @apply transition-all duration-[0.3s] ease-[ease] overflow-hidden border-[none] after:absolute after:content-["_"] after:z-[-1] after:w-full after:h-full after:bg-[#1fd1f9] after:bg-[linear-gradient(315deg,#1fd1f9_0%,#b621fe_74%)] after:transition-all after:duration-[0.3s] after:ease-[ease] after:left-0 after:top-0 hover:shadow-[4px_4px_6px_0_rgba(255,255,255,0.5),-4px_-4px_6px_0_rgba(116,125,136,0.2),inset_-4px_-4px_6px_0_rgba(255,255,255,0.5),inset_4px_4px_6px_0_rgba(116,125,136,0.3)] hover:text-white hover:after:rotate-180 hover:after:shadow-[4px_4px_6px_0_rgba(255,255,255,0.5),-4px_-4px_6px_0_rgba(116,125,136,0.2),inset_-4px_-4px_6px_0_rgba(255,255,255,0.5),inset_4px_4px_6px_0_rgba(116,125,136,0.3)] hover:after:scale-[2];
+}
+.btn-9:hover {
+  background: transparent;
+}
+.btn-9:hover:after {
+  -webkit-transform: scale(2) rotate(180deg);
+}

@@ -1,32 +1,38 @@
+import localFont from "next/font/local";
 import Image from "next/image";
 import React from "react";
 
 const navItems = [
   {
+    id: 0,
     title: "About Us",
     link: "#",
   },
   {
+    id: 1,
     title: "Pricing",
     link: "#",
   },
   {
+    id: 2,
     title: "Shop Now",
     link: "#",
   },
   {
+    id: 3,
     title: "Contact Us",
     link: "#",
   },
 ];
 
+
 const NavBar = () => {
   return (
-    <div className="flex flex-row items-center justify-between self-center w-[85%] bg-[#171717] rounded-md py-2 px-6">
+    <div className={`flex flex-row items-center justify-between self-center w-[85%] bg-[#171717] rounded-md py-2 px-6`}>
       <Image src="/globe.svg" alt="logo" width={32} height={32} />
       <ul className="flex flex-row gap-12 cursor-pointer">
         {navItems.map((item) => (
-          <li className="hover:bg-[#262626] py-3 px-4 rounded-md">
+          <li key={item.id} className="hover:bg-[#262626] py-3 px-4 rounded-md">
             {item.title}
           </li>
         ))}

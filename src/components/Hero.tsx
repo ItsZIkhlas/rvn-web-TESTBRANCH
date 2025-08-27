@@ -11,10 +11,10 @@ export default function Hero() {
   });
 
   const introducingOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
-  const ravenOpacity = useTransform(scrollYProgress, [0.3, 0.4, 0.8], [0, 1, 0]);
+  const ravenOpacity = useTransform(scrollYProgress, [0.3, 0.4, 0.6], [0, 1, 0]);
   
   // Subtitle fades in in the middle of the page
-  const subtitleOpacity = useTransform(scrollYProgress, [0.5, 0.6, 0.7], [0, 0, 1]);
+  const subtitleOpacity = useTransform(scrollYProgress, [0.5, 0.6, 0.7, 1], [0, 0, 1, 0]);
 
   return (
     <section

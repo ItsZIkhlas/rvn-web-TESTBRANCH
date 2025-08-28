@@ -11,40 +11,17 @@ export default function Hero() {
   });
 
   const introducingOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
-  const ravenOpacity = useTransform(scrollYProgress, [0.3, 0.4, 0.6], [0, 1, 0]);
+  const ravenOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
   
-  // Subtitle fades in in the middle of the page
+
   const subtitleOpacity = useTransform(scrollYProgress, [0.5, 0.6, 0.7, 1], [0, 0, 1, 0]);
 
   return (
     <section
       ref={ref}
-      className="relative h-[500vh] w-full bg-black flex flex-col items-center justify-center"
+      className="relative h-[300vh] w-full flex flex-col items-center justify-center"
     >
-      {/* Introducing */}
-      <motion.h1
-        style={{ opacity: introducingOpacity }}
-        className="text-white text-6xl md:text-8xl font-bold fixed top-1/3"
-      >
-        Introducing
-        {[".", ".", "."].map((dot, index) => (
-          <motion.span
-            key={index}
-            animate={{ y: [0, -10, 0] }}
-            transition={{
-              repeat: Infinity,
-              repeatType: "loop",
-              duration: 1,
-              ease: "easeInOut",
-              delay: index * 0.2,
-            }}
-            className="inline-block"
-          >
-            {dot}
-          </motion.span>
-        ))}
-      </motion.h1>
-
+      
       {/* Raven */}
       <motion.div
         style={{ opacity: ravenOpacity }}

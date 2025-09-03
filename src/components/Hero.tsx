@@ -9,19 +9,14 @@ export default function Hero() {
     target: ref,
     offset: ["start end", "end start"],
   });
-
-  const introducingOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
-  const ravenOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
-  
-
-  const subtitleOpacity = useTransform(scrollYProgress, [0.5, 0.6, 0.7, 1], [0, 0, 1, 0]);
+  const ravenOpacity = useTransform(scrollYProgress, [0.4, 0.6], [1, 0]);
+  const subtitleOpacity = useTransform(scrollYProgress, [0.5, 0.6, 0.8], [0, 1, 0]);
 
   return (
     <section
       ref={ref}
-      className="relative h-[300vh] w-full flex flex-col items-center justify-center"
+      className="relative h-[200vh] w-full flex flex-col items-center justify-center"
     >
-      
       {/* Raven */}
       <motion.div
         style={{ opacity: ravenOpacity }}
@@ -32,12 +27,13 @@ export default function Hero() {
         </h1>
       </motion.div>
 
-      {/* Subtitle in the middle */}
+      {/* Subtitle */}
       <motion.p
         style={{ opacity: subtitleOpacity }}
         className="fixed top-1/2 -translate-y-1/2 text-white text-3xl md:text-3xl font-medium text-center max-w-xl px-4"
       >
-        The world’s first AI-powered track coach for riders who demand precision and performance.
+        The world’s first AI-powered track coach for riders who demand precision
+        and performance.
       </motion.p>
     </section>
   );

@@ -87,7 +87,7 @@ export default function PricingSection() {
             </p>
 
             {/* Features */}
-            <ul className="text-gray-300 text-md mb-6 space-y-2">
+            <ul className="text-gray-300 text-md mb-6 space-y-2 flex flex-col items-start">
               {plan.features.map((feature, index) => (
                 <li key={index}>• {feature}</li>
               ))}

@@ -36,9 +36,9 @@ export default function CTASection() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="flex flex-col md:flex-row justify-center gap-6"
         >
-          <Link href="/pricing">
-            <button className="px-10 py-4 md:py-5 rounded-lg text-xl md:text-2xl font-bold text-white bg-gradient-to-r from-[#1fd1f9] to-[#b621fe] shadow-md hover:brightness-110 hover:scale-[1.05] active:scale-[0.98] transition-all duration-300">
-              See Pricing
+          <Link href="/waitlist">
+            <button className="px-10 py-4 md:py-5 rounded-lg text-xl md:text-2xl font-bold text-white bg-gradient-to-r from-[#1fd1f9] to-[#b621fe] shadow-md hover:brightness-110 hover:scale-[1.05] active:scale-[0.98] transition-all duration-300 cursor-pointer">
+              Join Waitlist
             </button>
           </Link>
           <Link href="/signup">

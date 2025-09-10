@@ -3,8 +3,7 @@
 import { useParams } from "next/navigation";
 import { useSessionStore } from "@/lib/sessionStore";
 import { useEffect, useState } from "react";
-import { createSupabaseClientWithAuth } from "@/lib/supabase";
-import { useAuth } from "@clerk/nextjs";
+import { supabase } from "@/lib/supabase";
 
 import MapBoxMap from "@/components/MapBoxMap";
 import { AppSidebar } from "@/components/app-sidebar";
@@ -81,20 +80,20 @@ function SessionDetailSkeleton() {
       </div>
 
       {/* Main Grid */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <div className="h-64 bg-gray-700 rounded"></div>
+      <div className="grid grid-cols-2 gap-6">
+        <div className="h-130 bg-gray-700 rounded"></div>
         <div className="flex flex-col gap-6 w-full">
           <div className="h-10 bg-gray-700 rounded w-1/2"></div>
           <div className="h-64 bg-gray-700 rounded"></div>
+        <div className="grid-cols-2 space-y-3.5 w-full">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="h-6 w-full bg-gray-700 rounded"></div>
+          ))}
+        </div>
         </div>
       </div>
 
       {/* Lap table skeleton */}
-      <div className="ml-[51%] space-y-2">
-        {[...Array(5)].map((_, i) => (
-          <div key={i} className="h-6 w-full bg-gray-700 rounded"></div>
-        ))}
-      </div>
     </div>
   );
 }
@@ -127,23 +126,9 @@ export default function SessionDetailPage() {
   const [loadingCorners, setLoadingCorners] = useState(false);
   const [selectedLap, setSelectedLap] = useState<Lap | null>(null);
 
-  const { getToken } = useAuth();
-
   // --- Fetch data ---
   const handleRefresh = async () => {
     if (!session_id) return;
-
-    const token = await getToken({ template: "supabase" });
-    if (!token) {
-      console.error("No Clerk token found");
-      setSession(null);
-      setLaps([]);
-      setCorners([]);
-      return;
-    }
-
-    const supabase = createSupabaseClientWithAuth(token);
-
     // Fetch session
     const { data: sessionData, error: sessionError } = await supabase
       .from("sessions")
@@ -202,11 +187,13 @@ export default function SessionDetailPage() {
   // --- Compute fastest lap ---
   const fastestLapIndex = laps.reduce((fastestIdx, lap, idx) => {
     const lapMs = lapTimeToMs(lap.time);
-    const fastestMs = fastestIdx === -1 ? Infinity : lapTimeToMs(laps[fastestIdx].time);
+    const fastestMs =
+      fastestIdx === -1 ? Infinity : lapTimeToMs(laps[fastestIdx].time);
     return lapMs < fastestMs ? idx : fastestIdx;
   }, -1);
 
-  const fastestLapId = fastestLapIndex !== -1 ? laps[fastestLapIndex].lap_number : null;
+  const fastestLapId =
+    fastestLapIndex !== -1 ? laps[fastestLapIndex].lap_number : null;
 
   // --- Render ---
   if (!session) {
@@ -269,7 +256,9 @@ export default function SessionDetailPage() {
                 {/* RIGHT: Session Summary + Table */}
                 <div className="flex flex-col gap-6 w-full">
                   {/* Summary */}
-                  <h3 className="text-xl font-semibold mt-4">Session Summary</h3>
+                  <h3 className="text-xl font-semibold mt-4">
+                    Session Summary
+                  </h3>
                   <Card className="w-[43rem]">
                     <CardContent className="p-6 space-y-6">
                       <div className="flex flex-col sm:flex-row justify-between border-b border-white/20 pb-4 gap-2">
@@ -282,11 +271,14 @@ export default function SessionDetailPage() {
                         <div className="flex gap-2 text-sm text-white/60">
                           <p>{session.created_at.slice(0, 10)}</p>
                           <p>
-                            {new Date(session.created_at).toLocaleTimeString("en-US", {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                              hour12: true,
-                            })}
+                            {new Date(session.created_at).toLocaleTimeString(
+                              "en-US",
+                              {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: true,
+                              }
+                            )}
                           </p>
                         </div>
                       </div>
@@ -295,27 +287,39 @@ export default function SessionDetailPage() {
                       <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-center">
                         <div className="text-center w-full md:w-auto">
                           <h1 className="text-5xl font-bold text-white">
-                            {session.fastest_lap.startsWith("00:") ? session.fastest_lap.slice(3) : session.fastest_lap}
+                            {session.fastest_lap.startsWith("00:")
+                              ? session.fastest_lap.slice(3)
+                              : session.fastest_lap}
                           </h1>
-                          <p className="text-orange-500 mt-1 text-lg">Fastest Lap</p>
+                          <p className="text-orange-500 mt-1 text-lg">
+                            Fastest Lap
+                          </p>
                         </div>
 
                         <div className="flex-1 space-y-4 flex flex-col items-end justify-between mr-4">
                           <div className="border-2 border-blue-500 text-blue-500 rounded-xl py-3 px-8 text-center">
                             <p className="text-lg font-semibold">
-                              {session.average_lap.startsWith("00:") ? session.average_lap.slice(3) : session.average_lap}
+                              {session.average_lap.startsWith("00:")
+                                ? session.average_lap.slice(3)
+                                : session.average_lap}
                             </p>
                             <p className="text-sm font-light">Average Lap</p>
                           </div>
 
                           <div className="flex justify-around text-center ml-[10px] gap-4">
                             <div>
-                              <p className="text-white text-lg font-semibold">{session.top_speed} mph</p>
+                              <p className="text-white text-lg font-semibold">
+                                {session.top_speed} mph
+                              </p>
                               <p className="text-white/60 text-sm">Top Speed</p>
                             </div>
                             <div>
-                              <p className="text-white text-lg font-semibold">{session.total_laps}</p>
-                              <p className="text-white/60 text-sm">Total Laps</p>
+                              <p className="text-white text-lg font-semibold">
+                                {session.total_laps}
+                              </p>
+                              <p className="text-white/60 text-sm">
+                                Total Laps
+                              </p>
                             </div>
                           </div>
                         </div>
@@ -326,16 +330,22 @@ export default function SessionDetailPage() {
                         <div className="flex gap-6 flex-wrap">
                           <div className="flex items-center gap-2">
                             <p className="text-white/70 text-sm">Max Lean</p>
-                            <span className="text-white text-base font-semibold">{session.max_lean_angle}°</span>
+                            <span className="text-white text-base font-semibold">
+                              {session.max_lean_angle}°
+                            </span>
                           </div>
                           <div className="flex items-center gap-2">
                             <p className="text-white/70 text-sm">Avg Lean</p>
-                            <span className="text-white text-base font-semibold">{session.avg_lean_angle}°</span>
+                            <span className="text-white text-base font-semibold">
+                              {session.avg_lean_angle}°
+                            </span>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
                           <p className="text-white/70 text-sm">Track Temp</p>
-                          <p className="text-white text-base font-semibold">{session.track_temperature}</p>
+                          <p className="text-white text-base font-semibold">
+                            {session.track_temperature}
+                          </p>
                         </div>
                       </div>
                     </CardContent>
@@ -343,7 +353,9 @@ export default function SessionDetailPage() {
 
                   {/* Lap Table */}
                   <Card className="w-full">
-                    <h3 className="text-xl font-semibold ml-4 mt-4">Lap Data</h3>
+                    <h3 className="text-xl font-semibold ml-4 mt-4">
+                      Lap Data
+                    </h3>
                     <CardContent className="overflow-x-auto">
                       <table className="min-w-full text-sm text-left text-white border border-white/10 rounded-md">
                         <thead className="bg-white/10">
@@ -362,15 +374,28 @@ export default function SessionDetailPage() {
                               <DialogTrigger asChild>
                                 <tr
                                   onClick={() => setSelectedLap(lap)}
-                                  className={`hover:bg-white/10 cursor-pointer ${lap.lap_number === fastestLapId ? "bg-white/10 font-semibold" : ""
-                                    }`}
+                                  className={`hover:bg-white/10 cursor-pointer ${
+                                    lap.lap_number === fastestLapId
+                                      ? "bg-white/10 font-semibold"
+                                      : ""
+                                  }`}
                                 >
-                                  <td className="px-4 py-2">{lap.lap_number}</td>
+                                  <td className="px-4 py-2">
+                                    {lap.lap_number}
+                                  </td>
                                   <td className="px-4 py-2">{lap.time}</td>
-                                  <td className="px-4 py-2">{lap.top_speed} km/h</td>
-                                  <td className="px-4 py-2">{lap.avg_lean_angle?.toFixed(1)}°</td>
-                                  <td className="px-4 py-2">{lap.max_lean_angle?.toFixed(1)}°</td>
-                                  <td className="px-4 py-2">{lap.rating ?? "N/A"}</td>
+                                  <td className="px-4 py-2">
+                                    {lap.top_speed} km/h
+                                  </td>
+                                  <td className="px-4 py-2">
+                                    {lap.avg_lean_angle?.toFixed(1)}°
+                                  </td>
+                                  <td className="px-4 py-2">
+                                    {lap.max_lean_angle?.toFixed(1)}°
+                                  </td>
+                                  <td className="px-4 py-2">
+                                    {lap.rating ?? "N/A"}
+                                  </td>
                                 </tr>
                               </DialogTrigger>
                               <DialogContent className="bg-zinc-900 text-white max-w-2xl rounded-2xl p-8 shadow-xl max-h-[90vh] overflow-y-auto space-y-8 animate-in fade-in zoom-in-90 duration-300 ease-out">

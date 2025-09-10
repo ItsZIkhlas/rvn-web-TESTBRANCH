@@ -13,8 +13,10 @@ import {
 } from "@/registry/new-york-v4/ui/sidebar";
 import InsightsPanel from "@/components/InsightsPanel";
 import { useEffect, useState } from "react";
-import { createSupabaseClientWithAuth } from "@/lib/supabase"; // updated import
+import { supabase } from "@/lib/supabase"; 
 import { useAuth, useUser } from "@clerk/nextjs";
+import { UserAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 interface Session {
   id: string;
@@ -35,24 +37,15 @@ interface Session {
 export default function Page() {
   const { fetchTrends } = useSessionTrends();
   const [sessions, setSessions] = useState<Session[]>([]);
-  const { getToken } = useAuth();
-  const { user } = useUser();
+  const { session } = UserAuth();
+  const router = useRouter();
 
   const handleRefresh = async () => {
-    const token = await getToken({ template: "supabase" });
-    if (!token) {
-      console.error("No Clerk token found");
-      setSessions([]);
-      return;
-    }
-
-    const supabase = createSupabaseClientWithAuth(token);
-
     const { data, error } = await supabase
       .from("sessions")
       .select("*")
       .order("created_at", { ascending: false })
-      .eq("user_id", user?.id)
+      // .eq("user_id", user?.id) CHANGING CLERK TO SUPABASE
 
     if (error) {
       console.error("Error fetching sessions:", error);
@@ -65,6 +58,18 @@ export default function Page() {
   useEffect(() => {
     handleRefresh();
   }, []);
+
+
+  useEffect(() => {
+    if (session === null) {
+      // No user -> redirect to login
+      router.push("/sign-up");
+    }
+  }, [session, router]);
+
+  if (!session) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <SidebarProvider
@@ -84,7 +89,7 @@ export default function Page() {
               <SidebarTrigger className="-ml-1" />
               <div className="">
                 <h1 className="text-2xl md:text-3xl font-bold">
-                  Welcome {user?.fullName}
+                  Welcome TEST
                 </h1>
                 <p className="mt-2 text-base md:text-lg opacity-90">
                   Here’s an overview of your recent sessions and insights.

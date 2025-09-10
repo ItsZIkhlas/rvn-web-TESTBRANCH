@@ -2,12 +2,10 @@
 
 import { useState, useRef, useEffect } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
-import { useAuth } from "@clerk/nextjs";
 import {
   SidebarInset,
   SidebarProvider,
 } from "@/registry/new-york-v4/ui/sidebar";
-import { useUser } from "@clerk/nextjs";
 import { Button } from "@/registry/new-york-v4/ui/button";
 import {
   Sheet,
@@ -16,7 +14,7 @@ import {
   SheetTrigger,
 } from "@/registry/new-york-v4/ui/sheet";
 import { Plus, History } from "lucide-react";
-import { createSupabaseClientWithAuth } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 
 interface Message {
   role: "user" | "ai";
@@ -40,20 +38,13 @@ export default function Page() {
   const bottomRef = useRef<HTMLDivElement>(null);
   const [prevConversations, setPrevConversations] = useState<Conversation[] | null>(null);
   const [convoId, setConvoId] = useState<string>();
-  const { user } = useUser();
-  const { getToken } = useAuth();
 
   // fetch conversations
   const handleMsgData = async () => {
-    const token = await getToken({ template: "supabase" });
-    if (!token) return;
-
-    const supabase = createSupabaseClientWithAuth(token);
-
     const { data: prevConvos, error } = await supabase
       .from("conversations")
       .select("*")
-      .eq("user_id", user?.id);
+      // .eq("user_id", user?.id); CHANGE USER ID TO SUPABASE
 
     if (error) {
       console.error("Error fetching conversations:", error);
@@ -67,15 +58,10 @@ export default function Page() {
   const handleMessageRender = async (conversation_id: string) => {
     setConvoId(conversation_id);
 
-    const token = await getToken({ template: "supabase" });
-    if (!token) return;
-
-    const supabase = createSupabaseClientWithAuth(token);
-
     const { data: currentMsg, error } = await supabase
       .from("messages")
       .select("*")
-      .eq("user_id", user?.id)
+      // .eq("user_id", user?.id) CHANGE USER ID TO SUPABASE
       .eq("conversation_id", conversation_id)
       .order("created_at", { ascending: true });
 
@@ -247,7 +233,7 @@ export default function Page() {
 
                 {msg.role === "user" && (
                   <img
-                    src={user?.imageUrl}
+                    // src={user?.imageUrl}
                     alt="User"
                     className="w-8 h-8 rounded-full ml-2 border border-blue-400/50"
                   />

@@ -36,8 +36,8 @@ const ShopPage = () => {
           className="text-lg md:text-xl text-gray-300 max-w-2xl mb-10"
         >
           Meet <span className="text-violet-400 font-semibold">RVN</span> — the
-          AI-powered motorcycle that redefines speed, precision, and
-          intelligence on the road.
+          AI-powered device that redefines speed, precision, and
+          intelligence on the track.
         </motion.p>
 
         {/* Product Showcase */}

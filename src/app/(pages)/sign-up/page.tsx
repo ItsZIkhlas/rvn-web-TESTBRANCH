@@ -111,12 +111,12 @@ export default function LoginPage() {
                     <div className="grid gap-3">
                       <div className="flex items-center">
                         <Label htmlFor="password">Password</Label>
-                        <a
+                        {/* <a
                           href="#"
                           className="ml-auto text-sm underline-offset-4 hover:underline"
                         >
                           Forgot your password?
-                        </a>
+                        </a> */}
                       </div>
                       <Input
                         id="password"
@@ -126,13 +126,13 @@ export default function LoginPage() {
                       />
                     </div>
                     <Button type="submit" className="w-full">
-                      Login
+                      Sign Up
                     </Button>
                   </div>
                   <div className="text-center text-sm">
                     Already have an account?{" "}
                     <a href="#" className="underline underline-offset-4">
-                      Sign Up
+                      Sign In
                     </a>
                   </div>
                 </div>

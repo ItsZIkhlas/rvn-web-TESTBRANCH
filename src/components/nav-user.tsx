@@ -28,15 +28,16 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/registry/new-york-v4/ui/sidebar";
-
-import { useUser, SignOutButton } from "@clerk/nextjs";
+import { UserAuth } from "@/context/AuthContext";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
-  const { user } = useUser();
+  const { session, signOut } = UserAuth();
+  if (!session) {
+    return <p>Loading</p> ;
+  }
 
-  if (!user) return null;
-
+  console.log("Logged in as:", session.user.email);
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -48,17 +49,17 @@ export function NavUser() {
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
-                  src={user.imageUrl}
-                  alt={user.fullName || "User"}
+                // src={user.imageUrl}
+                // alt={user.fullName || "User"}
                 />
                 <AvatarFallback className="rounded-lg">
-                  {user.fullName?.[0] ?? "?"}
+                  {/* {user.fullName?.[0] ?? "?"} */}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.fullName}</span>
+                <span className="truncate font-medium">TEST</span>
                 <span className="text-muted-foreground truncate text-xs">
-                  {user.primaryEmailAddress?.emailAddress}
+                  {session?.user?.email}
                 </span>
               </div>
               <IconDotsVertical className="ml-auto size-4" />
@@ -74,17 +75,17 @@ export function NavUser() {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage
-                    src={user.imageUrl}
-                    alt={user.fullName || "User"}
+                  // src={user.imageUrl}
+                  // alt={user.fullName || "User"}
                   />
                   <AvatarFallback className="rounded-lg">
-                    {user.fullName?.[0] ?? "?"}
+                    {/* {user.fullName?.[0] ?? "?"} */}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.fullName}</span>
+                  <span className="truncate font-medium">TEST</span>
                   <span className="text-muted-foreground truncate text-xs">
-                    {user.primaryEmailAddress?.emailAddress}
+                    {session?.user?.email}
                   </span>
                 </div>
               </div>
@@ -105,12 +106,10 @@ export function NavUser() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <SignOutButton>
-              <DropdownMenuItem>
-                <IconLogout />
-                Log out
-              </DropdownMenuItem>
-            </SignOutButton>
+            <DropdownMenuItem onClick={signOut}>
+              <IconLogout />
+              Log out
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

@@ -1,8 +1,8 @@
 "use client";
 
 import useSWR from "swr";
-import { createSupabaseClientWithAuth } from "@/lib/supabase";
-import { useAuth } from "@clerk/nextjs";
+import { supabase } from "@/lib/supabase";
+import { useAuth, useUser } from "@clerk/nextjs";
 
 export type Insight = {
   id: string;
@@ -21,14 +21,8 @@ export type Insight = {
 };
 
 export function useInsights(sessionId?: string) {
-  const { getToken } = useAuth();
 
   const fetchInsights = async (): Promise<Insight[]> => {
-    const token = await getToken({ template: "supabase" });
-    if (!token) throw new Error("No auth token found");
-
-    const supabase = createSupabaseClientWithAuth(token);
-
     let query = supabase
       .from("insights")
       .select(
@@ -40,6 +34,7 @@ export function useInsights(sessionId?: string) {
       `
       )
       .eq("deleted", false)
+      // .eq("user_id", user?.id) CHANGING CLERK TO SUPABASE
       .order("created_at", { ascending: false });
 
     if (sessionId) {

@@ -6,19 +6,28 @@ import {
   SidebarInset,
   SidebarProvider,
 } from "@/registry/new-york-v4/ui/sidebar";
-import { useUser } from "@clerk/nextjs";
 import { Button } from "@/registry/new-york-v4/ui/button";
 import {
   Sheet,
   SheetContent,
+  SheetTitle,
   SheetTrigger,
 } from "@/registry/new-york-v4/ui/sheet";
 import { Plus, History } from "lucide-react";
-import { DialogTitle } from "@/registry/new-york-v4/ui/dialog";
+import { supabase } from "@/lib/supabase";
 
 interface Message {
   role: "user" | "ai";
   content: string;
+  created_at?: string;
+}
+
+interface Conversation {
+  id: string;
+  summary: string;
+  archived: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 export default function Page() {
@@ -27,13 +36,53 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const { user } = useUser();
+  const [prevConversations, setPrevConversations] = useState<Conversation[] | null>(null);
+  const [convoId, setConvoId] = useState<string>();
 
+  // fetch conversations
+  const handleMsgData = async () => {
+    const { data: prevConvos, error } = await supabase
+      .from("conversations")
+      .select("*")
+      // .eq("user_id", user?.id); CHANGE USER ID TO SUPABASE
+
+    if (error) {
+      console.error("Error fetching conversations:", error);
+      setPrevConversations(null);
+    } else {
+      setPrevConversations(prevConvos);
+    }
+  };
+
+  // fetch messages for a conversation
+  const handleMessageRender = async (conversation_id: string) => {
+    setConvoId(conversation_id);
+
+    const { data: currentMsg, error } = await supabase
+      .from("messages")
+      .select("*")
+      // .eq("user_id", user?.id) CHANGE USER ID TO SUPABASE
+      .eq("conversation_id", conversation_id)
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      console.error("Error fetching messages:", error);
+      setMessages([]);
+    } else {
+      setMessages(currentMsg ?? []);
+    }
+  };
+
+  // send message locally + placeholder
   const sendMessage = () => {
     if (!input.trim()) return;
 
     const userMessage: Message = { role: "user", content: input };
-    setMessages((prev) => [...prev, userMessage]);
+    const placeholder: Message = { role: "ai", content: "..." };
+
+    // add user msg + placeholder in one go
+    setMessages((prev) => [...prev, userMessage, placeholder]);
+
     setInput("");
     setLoading(true);
 
@@ -42,14 +91,56 @@ export default function Page() {
         role: "ai",
         content: `🤖 Simulated AI response: "${userMessage.content}"`,
       };
-      setMessages((prev) => [...prev, aiMessage]);
+
+      // replace last placeholder with real ai msg
+      setMessages((prev) => [...prev.slice(0, -1), aiMessage]);
       setLoading(false);
     }, 800);
   };
 
+  // scroll to bottom when messages update
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // only fetch conversations once on mount
+  useEffect(() => {
+    handleMsgData();
+  }, []);
+
+  // 🔴 Realtime subscription (commented - costs money if left on)
+  /*
+  useEffect(() => {
+    if (!convoId) return;
+
+    (async () => {
+      const token = await getToken({ template: "supabase" });
+      if (!token) return;
+
+      const supabase = createSupabaseClientWithAuth(token);
+
+      const channel = supabase
+        .channel("messages")
+        .on(
+          "postgres_changes",
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "messages",
+            filter: `conversation_id=eq.${convoId}`,
+          },
+          (payload) => {
+            setMessages((prev) => [...prev, payload.new]);
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    })();
+  }, [convoId]);
+  */
 
   return (
     <SidebarProvider
@@ -89,19 +180,23 @@ export default function Page() {
                   side="right"
                   className="w-[300px] p-4 bg-gray-900/90 backdrop-blur-md border-l border-purple-500/30 text-white"
                 >
-                  <DialogTitle className="text-lg font-semibold mb-4 text-purple-300">
-                    Old Chats
-                  </DialogTitle>
+                  <SheetTitle className="text-lg font-semibold mb-4 text-purple-300">
+                    Previous Chats
+                  </SheetTitle>
                   <ul className="space-y-2">
-                    {messages.length === 0 ? (
+                    {!prevConversations ? (
                       <li className="text-sm text-gray-400">No chats yet</li>
                     ) : (
-                      messages.map((m, i) => (
+                      prevConversations.map((m, i) => (
                         <li
                           key={i}
-                          className="text-sm truncate px-3 py-2 rounded-md bg-gray-800/50 hover:bg-gray-700/50 transition"
+                          className="text-sm truncate px-3 py-2 rounded-md bg-gray-800/50 hover:bg-gray-700/50 transition cursor-pointer"
+                          onClick={() => {
+                            handleMessageRender(m.id);
+                            setSheetOpen(false);
+                          }}
                         >
-                          {m.content}
+                          {m.summary}
                         </li>
                       ))
                     )}
@@ -116,9 +211,7 @@ export default function Page() {
             {messages.map((msg, i) => (
               <div
                 key={i}
-                className={`flex items-end ${
-                  msg.role === "user" ? "justify-end" : "justify-start"
-                }`}
+                className={`flex items-end ${msg.role === "user" ? "justify-end" : "justify-start"}`}
               >
                 {msg.role === "ai" && (
                   <img
@@ -128,17 +221,19 @@ export default function Page() {
                   />
                 )}
                 <div
-                  className={`max-w-[75%] px-5 py-3 rounded-2xl text-md leading-relaxed shadow-lg whitespace-pre-wrap break-words transition-all duration-300 ${
-                    msg.role === "user"
-                      ? "bg-gradient-to-br from-blue-600 to-cyan-500 text-white shadow-cyan-500/20"
-                      : "bg-gray-800/80 border border-gray-700 text-gray-100 shadow-purple-500/10"
-                  }`}
+                  className={`max-w-[75%] px-5 py-3 rounded-2xl shadow-lg whitespace-pre-wrap break-words transition-all duration-300 ${msg.role === "user"
+                    ? "bg-gradient-to-br from-blue-600 to-cyan-500 text-white"
+                    : msg.content === "..."
+                      ? "bg-gray-700/50 italic text-gray-400"
+                      : "bg-gray-800/80 border border-gray-700 text-gray-100"
+                    }`}
                 >
                   {msg.content}
                 </div>
+
                 {msg.role === "user" && (
                   <img
-                    src={user?.imageUrl}
+                    // src={user?.imageUrl}
                     alt="User"
                     className="w-8 h-8 rounded-full ml-2 border border-blue-400/50"
                   />

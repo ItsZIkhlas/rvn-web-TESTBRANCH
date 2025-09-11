@@ -2,25 +2,18 @@
 
 import { useState } from "react";
 import { useAuth } from "@clerk/nextjs";
-import { createSupabaseClientWithAuth } from "@/lib/supabase"; // helper to create client with token
+import { supabase } from "@/lib/supabase"; // helper to create client with token
 
 export function useSessionTrends() {
   const [trends, setTrends] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { getToken } = useAuth();
-
   async function fetchTrends() {
     setLoading(true);
     setError(null);
 
     try {
-      const token = await getToken({ template: "supabase" });
-      if (!token) throw new Error("No auth token found");
-
-      const supabase = createSupabaseClientWithAuth(token);
-
       // Fetch latest session_trends entry
       const { data, error: fetchError } = await supabase
         .from("session_trends")

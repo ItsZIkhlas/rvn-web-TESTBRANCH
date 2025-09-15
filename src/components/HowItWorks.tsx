@@ -87,20 +87,6 @@ export default function HowItWorks() {
           );
         })}
       </div>
-
-      {/* Watch Video Button */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 1 }}
-        className="mt-12 md:mt-16"
-      >
-        <button
-          className="mx-auto flex items-center justify-center px-10 py-5 rounded-lg font-lato text-2xl md:text-3xl font-medium text-white bg-gradient-to-r from-[#1fd1f9] to-[#b621fe] transition-all duration-300 ease-out hover:brightness-110 hover:scale-[1.05] active:scale-[0.98] shadow-md hover:shadow-lg"
-        >
-          Watch Video
-        </button>
-      </motion.div>
     </section>
   );
 }

@@ -8,7 +8,6 @@ import { Menu, X } from "lucide-react";
 const navItems = [
   { id: 0, title: "Home", link: "/" },
   { id: 1, title: "Pricing", link: "/pricing" },
-  { id: 2, title: "Shop Now", link: "/shop-now" },
   { id: 3, title: "About Us", link: "#" },
   { id: 4, title: "Contact Us", link: "#" },
 ];
@@ -20,7 +19,9 @@ const NavBar = () => {
     <nav className="fixed top-4 left-0 w-full z-50 flex justify-center">
       <div className="flex items-center justify-between w-[90%] md:w-[85%] bg-[#171717] rounded-md py-2 px-4 md:px-6">
         {/* Logo */}
-        <Image src="/globe.svg" alt="logo" width={32} height={32} />
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-violet-400 via-blue-400 to-violet-500 bg-clip-text text-transparent">
+            RVN
+          </h1>
 
         {/* Desktop Menu */}
         <ul className="hidden md:flex flex-row gap-6 lg:gap-12 cursor-pointer">
@@ -34,9 +35,11 @@ const NavBar = () => {
         </ul>
 
         {/* Sign Up Button */}
-        <button className="hidden md:inline-flex items-center justify-center px-6 py-2 rounded-md font-lato font-medium text-white bg-gradient-to-r from-[#1fd1f9] to-[#b621fe] transition-all duration-300 hover:brightness-110 hover:scale-[1.05] active:scale-[0.98] shadow-md hover:shadow-lg">
-          Sign Up
+        <Link href="/waitlist">
+        <button className="hidden md:inline-flex items-center justify-center px-6 py-2 rounded-md font-lato font-medium text-white bg-violet-500 transition-all duration-300 hover:brightness-110 hover:scale-[1.05] active:scale-[0.98] shadow-md hover:shadow-lg">
+          Join Waitlist
         </button>
+        </Link>
 
         {/* Mobile Hamburger */}
         <div className="md:hidden">
@@ -59,12 +62,14 @@ const NavBar = () => {
               </li>
             </Link>
           ))}
+          <Link href="/waitlist">
           <button
             className="mt-2 px-6 py-2 rounded-md font-lato font-medium text-white bg-gradient-to-r from-[#1fd1f9] to-[#b621fe] hover:brightness-110 hover:scale-[1.05] active:scale-[0.98] shadow-md hover:shadow-lg"
             onClick={() => setIsOpen(false)}
           >
-            Sign Up
+            Join Waitlist
           </button>
+          </Link>
         </div>
       )}
     </nav>

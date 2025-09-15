@@ -12,6 +12,7 @@ import {
 import { Input } from "@/registry/new-york-v4/ui/input";
 import { Label } from "@/registry/new-york-v4/ui/label";
 import { GalleryVerticalEnd } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -131,9 +132,9 @@ export default function SignUpPage() {
                   </div>
                   <div className="text-center text-sm">
                     Don't have an account?{" "}
-                    <a href="#" className="underline underline-offset-4">
+                    <Link href="/sign-up" className="underline underline-offset-4">
                       Sign Up
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </form>

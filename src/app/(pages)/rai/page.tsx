@@ -157,7 +157,7 @@ export default function Page() {
           {/* HEADER */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-cyan-500/20 bg-gray-900/70 backdrop-blur-xl shadow-lg">
             <h1 className="text-xl font-bold bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 bg-clip-text text-transparent">
-              Chat Console
+              RAI
             </h1>
             <div className="flex gap-2">
               <Button

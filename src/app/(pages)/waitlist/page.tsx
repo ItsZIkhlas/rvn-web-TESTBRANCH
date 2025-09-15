@@ -3,18 +3,25 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import NavBar from "@/components/NavBar";
+import { supabase } from "@/lib/supabase";
 
 const WaitlistPage = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [spotsLeft, setSpotsLeft] = useState(0);
+  const [position, setPosition] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
 
+  // Fetch available spots on mount
   useEffect(() => {
     const fetchSpots = async () => {
-      const res = await fetch("/api/spots-left");
-      const data = await res.json();
-      setSpotsLeft(data.spotsLeft ?? 0);
+      const { count, error } = await supabase
+        .from("waitlist")
+        .select("*", { count: "exact", head: true });
+
+      if (!error) {
+        setSpotsLeft(Math.max(0, 10000 - (count ?? 0)));
+      }
     };
     fetchSpots();
   }, []);
@@ -23,20 +30,36 @@ const WaitlistPage = () => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
+    setPosition(null);
 
-    const res = await fetch("/api/waitlist", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    });
-    const data = await res.json();
-    setMessage(data.message);
-    setEmail("");
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setPosition(data.position);
+        setMessage(`You’ve joined the waitlist! Check your email.`);
+        setEmail("");
+        setSpotsLeft((prev) => Math.max(0, prev - 1));
+      } else {
+        setMessage(data.error || "Something went wrong.");
+      }
+    } catch (err: any) {
+      console.error("Error submitting waitlist:", err);
+      setMessage("Something went wrong.");
+    }
+
     setLoading(false);
   };
 
   return (
     <main className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-black text-white px-6">
+      {/* Gradient Backgrounds */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(138,43,226,0.15),transparent_60%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,_rgba(0,191,255,0.15),transparent_60%)]" />
 
@@ -56,13 +79,24 @@ const WaitlistPage = () => {
           Sign up now and secure your spot for a board.
         </p>
 
+        {/* Spots Left + Position */}
         <div className="mb-8">
           <p className="text-sm md:text-base font-medium text-gray-400">
             Only <span className="text-violet-400 font-bold">{spotsLeft}</span> spots left
           </p>
+          {position && (
+            <p className="text-sm md:text-base font-medium text-gray-400">
+              Your position:{" "}
+              <span className="text-violet-400 font-bold">#{position}</span>
+            </p>
+          )}
         </div>
 
-        <form onSubmit={handleSubmit} className="flex w-full max-w-md flex-col sm:flex-row gap-3">
+        {/* Waitlist Form */}
+        <form
+          onSubmit={handleSubmit}
+          className="flex w-full max-w-md flex-col sm:flex-row gap-3"
+        >
           <input
             type="email"
             placeholder="Enter your email"
@@ -80,7 +114,9 @@ const WaitlistPage = () => {
           </button>
         </form>
 
-        {message && <p className="mt-4 text-green-400 font-medium">{message}</p>}
+        {message && (
+          <p className="mt-4 text-green-400 font-medium">{message}</p>
+        )}
       </motion.div>
     </main>
   );

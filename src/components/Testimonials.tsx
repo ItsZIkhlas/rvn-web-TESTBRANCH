@@ -27,7 +27,7 @@ const testimonials = [
     avatar: "/pfp3.jpg",
     stars: 5,
     review:
-      "RVN’s real-time tracking is a game-changer. I can literally see where I’m losing time and fix it instantly. It’s like having a pit crew analyzing every corner.",
+      "RVN’s AI ChatBot is a game-changer. I can literally see where I’m losing time and fix it instantly. It’s like having a pit crew analyzing every corner.",
   },
 ];
 

@@ -6,10 +6,6 @@ import Link from "next/link";
 export default function CTASection() {
   return (
     <section className="relative w-full h-screen flex items-center justify-center overflow-hidden">
-      {/* Animated orbs in the background */}
-      <div className="absolute -top-40 -left-40 w-96 h-96 bg-violet-500 rounded-full mix-blend-soft-light filter blur-[150px] opacity-30 animate-pulse" />
-      <div className="absolute top-1/2 -right-40 w-96 h-96 bg-blue-500 rounded-full mix-blend-soft-light filter blur-[150px] opacity-20 animate-pulse" />
-
       {/* Main content */}
       <div className="relative z-10 text-center px-6 max-w-3xl">
         <motion.h2
@@ -27,7 +23,8 @@ export default function CTASection() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-gray-300 text-lg md:text-xl mb-12"
         >
-          RVN gives you real-time insights, AI coaching, and data-driven feedback to improve every lap on the track.
+          RVN gives you real-time insights, AI coaching, and data-driven
+          feedback to improve every lap on the track.
         </motion.p>
 
         <motion.div
@@ -36,16 +33,17 @@ export default function CTASection() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="flex flex-col md:flex-row justify-center gap-6"
         >
-          <Link href="/waitlist">
-            <button className="px-10 py-4 md:py-5 rounded-lg text-xl md:text-2xl font-bold text-white bg-gradient-to-r from-[#1fd1f9] to-[#b621fe] shadow-md hover:brightness-110 hover:scale-[1.05] active:scale-[0.98] transition-all duration-300 cursor-pointer">
+          <button className="cursor-pointer px-10 py-4 md:py-5 rounded-lg text-xl md:text-2xl font-bold text-white bg-gradient-to-r from-[#1fd1f9] to-[#b621fe] shadow-md hover:brightness-110 hover:scale-[1.05] active:scale-[0.98] transition-all duration-300 cursor-pointer">
+            <Link href="/waitlist">
               Join Waitlist
-            </button>
-          </Link>
-          <Link href="/signup">
+            </Link>
+          </button>
+
+          {/* <Link href="/signup">
             <button className="px-10 py-4 md:py-5 rounded-lg text-xl md:text-2xl font-bold text-white border-2 border-violet-500 hover:bg-violet-500 hover:bg-opacity-20 transition-all duration-300">
               Sign Up Free
             </button>
-          </Link>
+          </Link> */}
         </motion.div>
       </div>
     </section>

@@ -32,9 +32,65 @@ const steps = [
   },
 ];
 
+const bikes = [
+  { delay: 0, duration: 6 },
+  { delay: 0, duration: 8 },
+  { delay: 0, duration: 7 },
+];
+
 export default function HowItWorks() {
   return (
     <section className="relative w-full min-h-screen flex flex-col items-center justify-center px-6 py-16 md:py-24">
+      <svg className="absolute inset-0 w-full h-full pointer-events-none">
+        <path
+          id="bikePath"
+          d="M 0 500 C 300 400, 800 700, 2000 300"
+          stroke="gray"
+          strokeWidth="4"
+          strokeDasharray="15 15"
+          fill="transparent"
+          style={{ filter: "blur(3px)", opacity: 1 }}
+        />
+      </svg>
+      {/* Bikes with smooth neon trails */}
+      {bikes.map((bike, i) => (
+        <motion.div
+          key={i}
+          className="absolute"
+          style={{
+            top: "-40px",
+            left: "-1%",
+            offsetPath: "path('M 0 500 C 300 400, 900 700, 2000 300')",
+            offsetRotate: "auto",
+          }}
+          animate={{ offsetDistance: ["0%", "100%"] }}
+          transition={{
+            repeat: Infinity,
+            repeatType: "loop",
+            duration: bike.duration,
+            ease: "linear",
+            delay: bike.delay,
+          }}
+        >
+          <img
+            src="/motorbike.png"
+            width={120}
+            className="relative z-10"
+          />
+
+          <div
+            className="absolute h-1 rounded-full"
+            style={{
+              top: "120px",
+              marginLeft: "-70px",
+              width: "150px",
+              background: "linear-gradient(to right, #953ce7ff, transparent)",
+              filter: "blur(5px)",
+              opacity: 0.6,
+            }}
+          />
+        </motion.div>
+      ))}
       {/* Section Title */}
       <div className="text-center mb-16 md:mb-24 max-w-3xl">
         <motion.h2

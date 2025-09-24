@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function CTASection() {
   return (
-    <section className="relative w-full h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden">
       {/* Main content */}
       <div className="relative z-10 text-center px-6 max-w-3xl">
         <motion.h2
@@ -33,18 +33,22 @@ export default function CTASection() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="flex flex-col md:flex-row justify-center gap-6"
         >
-          <button className="cursor-pointer px-10 py-4 md:py-5 rounded-lg text-xl md:text-2xl font-bold text-white bg-gradient-to-r from-[#1fd1f9] to-[#b621fe] shadow-md hover:brightness-110 hover:scale-[1.05] active:scale-[0.98] transition-all duration-300 cursor-pointer">
-            <Link href="/waitlist">
-              Join Waitlist
-            </Link>
-          </button>
-
+          {/* Example future button */}
           {/* <Link href="/signup">
             <button className="px-10 py-4 md:py-5 rounded-lg text-xl md:text-2xl font-bold text-white border-2 border-violet-500 hover:bg-violet-500 hover:bg-opacity-20 transition-all duration-300">
               Sign Up Free
             </button>
           </Link> */}
         </motion.div>
+      </div>
+
+      {/* Waitlist button at bottom */}
+      <div className="absolute bottom-70 z-50">
+        <Link href="/waitlist">
+          <button className="px-10 py-4 md:py-5 rounded-lg text-xl md:text-2xl font-bold text-white bg-gradient-to-r from-[#1fd1f9] to-[#b621fe] shadow-md hover:brightness-110 hover:scale-[1.05] active:scale-[0.98] transition-all duration-300">
+            Join Waitlist
+          </button>
+        </Link>
       </div>
     </section>
   );

@@ -35,7 +35,9 @@ const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
         className={`${latoMain} bg-background text-foreground overscroll-none antialiased`}
       >
         <AuthContextProvider>
-          <ThemeProvider attribute="class">{children}</ThemeProvider>
+          <ThemeProvider attribute="class">
+            {children}
+          </ThemeProvider>
         </AuthContextProvider>
       </body>
     </html>

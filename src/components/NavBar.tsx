@@ -8,8 +8,8 @@ import { Menu, X } from "lucide-react";
 const navItems = [
   { id: 0, title: "Home", link: "/" },
   { id: 1, title: "Pricing", link: "/pricing" },
-  { id: 3, title: "About Us", link: "#" },
-  { id: 4, title: "Contact Us", link: "#" },
+  { id: 3, title: "About Us", link: "/about-us" },
+  { id: 4, title: "Contact Us", link: "/contact" },
 ];
 
 const NavBar = () => {

@@ -2,6 +2,7 @@
 
 import NavBar from "@/components/NavBar";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 40 },
@@ -85,18 +86,27 @@ export default function AboutPage() {
             </span>
           </motion.h2>
 
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-10">
+          <div className="grid sm:grid-cols-2 gap-10">
             {[
-              { name: "Zabih Yousuf", role: "Founder & Backend Developer" },
-              { name: "Asad Yousuf", role: "Lead Racer & Tester" },
-              { name: "Zayd Asif", role: "Lead Website Developer" },
+              {
+                name: "Zabih Yousuf",
+                role: "Founder & Backend Developer",
+                img: "/zabih.jfif",
+              },
+              { name: "Asad Yousuf", role: "Lead Racer & Tester", img: "/asad.jpg8239" },
             ].map((member, i) => (
               <motion.div
                 key={i}
                 {...fadeUp(0.2 * i)}
                 className="flex flex-col items-center bg-white/5 border border-white/10 rounded-2xl p-6 shadow-lg hover:shadow-cyan-500/20 transition"
               >
-                <div className="w-24 h-24 rounded-full bg-gradient-to-r from-purple-400 to-cyan-400 mb-4" />
+                <Image
+                  src={member.img ?? "/default-profile.png"}
+                  alt="pfp"
+                  width={100}
+                  height={100}
+                  className="w-24 h-24 rounded-full bg-gradient-to-r from-purple-400 to-cyan-400 mb-4"
+                />
                 <h3 className="text-xl font-semibold">{member.name}</h3>
                 <p className="text-gray-400">{member.role}</p>
               </motion.div>

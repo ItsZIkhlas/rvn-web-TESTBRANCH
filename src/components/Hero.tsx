@@ -33,13 +33,12 @@ export default function Hero() {
 
       <motion.p
         style={{ opacity: subtitleOpacityWithOffset }}
-        className="text-white text-4xl font-medium text-center max-w-md px-4 mt-150 z-50 "
+        className="text-white text-4xl font-medium text-center max-w-md px-4 mt-250 z-50 "
       >
         The world’s first AI-powered track coach for riders who demand precision
         and performance.
       </motion.p>
 
-      {/* Mobile Raven (scrolls naturally) */}
       <motion.div
         style={{ opacity: ravenOpacity }}
         className="sm:hidden absolute top-[25vh] left-1/2 -translate-x-1/2 flex flex-col items-center text-center z-20"

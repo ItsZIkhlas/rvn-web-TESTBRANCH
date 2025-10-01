@@ -29,9 +29,9 @@ export default function Footer() {
           <a href="#" className="hover:text-white transition-colors">
             <Youtube className="w-6 h-6" />
           </a> */}
-          <a href="#" className="hover:text-white transition-colors">
+          {/* <a href="#" className="hover:text-white transition-colors">
             <Linkedin className="w-6 h-6" />
-          </a>
+          </a> */}
         </div>
       </div>
 

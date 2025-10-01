@@ -42,7 +42,7 @@ export default function CTASection() {
         </motion.div>
       </div>
 
-      {/* Waitlist button at bottom */}
+      {/* Waitlist button*/}
       <div className=" z-50">
         <Link href="/waitlist">
           <button className="px-10 py-4 md:py-5 rounded-lg text-xl md:text-2xl font-bold text-white bg-gradient-to-r from-[#1fd1f9] to-[#b621fe] shadow-md hover:brightness-110 hover:scale-[1.05] active:scale-[0.98] transition-all duration-300">

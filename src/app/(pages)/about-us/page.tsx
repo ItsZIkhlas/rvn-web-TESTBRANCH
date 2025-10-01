@@ -7,7 +7,7 @@ import Image from "next/image";
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 40 },
   animate: { opacity: 1, y: 0 },
-  transition: { delay, duration: 0.6, ease: ["easeOut"] },
+  transition: { delay, duration: 0.6, ease: "easeOut" },
 });
 
 export default function AboutPage() {
@@ -90,10 +90,24 @@ export default function AboutPage() {
             {[
               {
                 name: "Zabih Yousuf",
-                role: "Founder & Backend Developer",
+                role: "Founder & CEO",
                 img: "/zabih.jfif",
               },
-              { name: "Asad Yousuf", role: "Lead Racer & Tester", img: "/asad.jpg8239" },
+              {
+                name: "Asad Yousuf",
+                role: "Founder",
+                img: "/asad.jpg",
+              },
+              {
+                name: "Jalila Yousuf",
+                role: "Lead Software Engineer",
+                img: "/jalila.jpeg",
+              },
+              {
+                name: "Zayd Asif",
+                role: "Software Engineer",
+                img: "/.png",
+              },
             ].map((member, i) => (
               <motion.div
                 key={i}

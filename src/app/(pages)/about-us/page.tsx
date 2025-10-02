@@ -92,21 +92,25 @@ export default function AboutPage() {
                 name: "Zabih Yousuf",
                 role: "Founder & CEO",
                 img: "/zabih.jfif",
+                class: "w-24 h-24",
               },
               {
                 name: "Asad Yousuf",
                 role: "Founder",
                 img: "/asad.jpg",
+                class: "w-24 h-24",
               },
               {
                 name: "Jalila Yousuf",
                 role: "Lead Software Engineer",
                 img: "/jalila.jpeg",
+                class: "w-24 h-24",
               },
               {
                 name: "Zayd Asif",
                 role: "Software Engineer",
-                img: "/.png",
+                img: "/zayd.png",
+                class: "w-24 h-48",
               },
             ].map((member, i) => (
               <motion.div

@@ -6,19 +6,14 @@ import { ChevronDown } from "lucide-react";
 
 const faqs = [
   {
-    question: "Can I change my plan later?",
-    answer:
-      "Yes! You can upgrade or downgrade your RVN plan anytime. Your data and progress are preserved across plans.",
-  },
-  {
-    question: "Is there a free trial?",
-    answer:
-      "Currently, we offer a 7-day trial for new users to explore the Starter plan. No credit card is required to start the trial.",
-  },
-  {
     question: "What payment methods are accepted?",
     answer:
       "We accept all major credit cards, PayPal, and Apple/Google Pay for seamless checkout.",
+  },
+  {
+    question: "Is RVN a one-time purchase or subscription?",
+    answer:
+      "No, The RVN device is a one-time purchase but the software access is subscription-based.",
   },
   {
     question: "Is my data secure?",
@@ -28,7 +23,7 @@ const faqs = [
   {
     question: "Can I track multiple bikes?",
     answer:
-      "Yes! Depending on your plan, you can track multiple bike profiles simultaneously and compare their performance.",
+      "Not yet, but it's on our roadmap! Currently, each account supports one bike profile.",
   },
 ];
 

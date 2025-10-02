@@ -18,28 +18,9 @@ export default function Footer() {
           <p className="text-gray-400 mt-2">Elevate your riding experience.</p>
         </div>
 
-        {/* Navigation Links */}
-        <div className="flex flex-col md:flex-row gap-6 text-center md:text-left">
-          <a href="#features" className="hover:text-white transition-colors">
-            Features
-          </a>
-          <a href="#how-it-works" className="hover:text-white transition-colors">
-            How It Works
-          </a>
-          <a href="#pricing" className="hover:text-white transition-colors">
-            Pricing
-          </a>
-          <a href="#testimonials" className="hover:text-white transition-colors">
-            Testimonials
-          </a>
-          <a href="#contact" className="hover:text-white transition-colors">
-            Contact
-          </a>
-        </div>
-
         {/* Social Media */}
         <div className="flex gap-4">
-          <a href="#" className="hover:text-white transition-colors">
+          {/* <a href="#" className="hover:text-white transition-colors">
             <Instagram className="w-6 h-6" />
           </a>
           <a href="#" className="hover:text-white transition-colors">
@@ -47,10 +28,10 @@ export default function Footer() {
           </a>
           <a href="#" className="hover:text-white transition-colors">
             <Youtube className="w-6 h-6" />
-          </a>
-          <a href="#" className="hover:text-white transition-colors">
+          </a> */}
+          {/* <a href="#" className="hover:text-white transition-colors">
             <Linkedin className="w-6 h-6" />
-          </a>
+          </a> */}
         </div>
       </div>
 

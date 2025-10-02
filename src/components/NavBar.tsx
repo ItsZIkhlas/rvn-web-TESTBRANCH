@@ -8,9 +8,8 @@ import { Menu, X } from "lucide-react";
 const navItems = [
   { id: 0, title: "Home", link: "/" },
   { id: 1, title: "Pricing", link: "/pricing" },
-  { id: 2, title: "Shop Now", link: "/shop-now" },
-  { id: 3, title: "About Us", link: "#" },
-  { id: 4, title: "Contact Us", link: "#" },
+  { id: 3, title: "About Us", link: "/about-us" },
+  { id: 4, title: "Contact Us", link: "/contact" },
 ];
 
 const NavBar = () => {
@@ -20,7 +19,9 @@ const NavBar = () => {
     <nav className="fixed top-4 left-0 w-full z-50 flex justify-center">
       <div className="flex items-center justify-between w-[90%] md:w-[85%] bg-[#171717] rounded-md py-2 px-4 md:px-6">
         {/* Logo */}
-        <Image src="/globe.svg" alt="logo" width={32} height={32} />
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-violet-400 via-blue-400 to-violet-500 bg-clip-text text-transparent">
+          RVN
+        </h1>
 
         {/* Desktop Menu */}
         <ul className="hidden md:flex flex-row gap-6 lg:gap-12 cursor-pointer">
@@ -34,37 +35,50 @@ const NavBar = () => {
         </ul>
 
         {/* Sign Up Button */}
-        <button className="hidden md:inline-flex items-center justify-center px-6 py-2 rounded-md font-lato font-medium text-white bg-gradient-to-r from-[#1fd1f9] to-[#b621fe] transition-all duration-300 hover:brightness-110 hover:scale-[1.05] active:scale-[0.98] shadow-md hover:shadow-lg">
-          Sign Up
-        </button>
+        <Link href="/waitlist">
+          <button className="hidden md:inline-flex items-center justify-center px-6 py-2 rounded-md font-lato font-medium text-white bg-violet-500 transition-all duration-300 hover:brightness-110 hover:scale-[1.05] active:scale-[0.98] shadow-md hover:shadow-lg">
+            Join Waitlist
+          </button>
+        </Link>
 
         {/* Mobile Hamburger */}
         <div className="md:hidden">
           <button onClick={() => setIsOpen(!isOpen)}>
-            {isOpen ? <X className="w-6 h-6 text-white" /> : <Menu className="w-6 h-6 text-white" />}
+            {isOpen ? (
+              <X className="w-6 h-6 text-white" />
+            ) : (
+              <Menu className="w-6 h-6 text-white" />
+            )}
           </button>
         </div>
       </div>
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="absolute top-full left-0 w-full bg-[#171717] flex flex-col items-center py-4 gap-4 md:hidden rounded-b-md shadow-lg">
-          {navItems.map((item) => (
-            <Link key={item.id} href={item.link}>
-              <li
-                className="list-none hover:bg-[#262626] py-2 px-4 rounded-md w-[90%] text-center"
+        <div className="absolute top-full left-0 w-[80%] bg-[#111111] overflow-hidden rounded-2xl shadow-xl border-t border-white/10 animate-slideDown mt-4 ml-12">
+          <ul className="flex flex-col items-center py-6 space-y-4">
+            {navItems.map((item) => (
+              <Link key={item.id} href={item.link} className="w-full">
+                <li
+                  className="list-none w-[85%] mx-auto py-3 text-lg font-medium text-white/80 text-center rounded-lg hover:bg-white/10 hover:text-white transition-all duration-200"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {item.title}
+                </li>
+              </Link>
+            ))}
+          </ul>
+
+          <div className="flex justify-center pb-6">
+            <Link href="/waitlist" className="w-[85%]">
+              <button
+                className="w-full py-3 rounded-xl font-semibold text-white bg-violet-500 shadow-lg hover:brightness-110 hover:scale-105 active:scale-95 transition-transform duration-200"
                 onClick={() => setIsOpen(false)}
               >
-                {item.title}
-              </li>
+                Join Waitlist
+              </button>
             </Link>
-          ))}
-          <button
-            className="mt-2 px-6 py-2 rounded-md font-lato font-medium text-white bg-gradient-to-r from-[#1fd1f9] to-[#b621fe] hover:brightness-110 hover:scale-[1.05] active:scale-[0.98] shadow-md hover:shadow-lg"
-            onClick={() => setIsOpen(false)}
-          >
-            Sign Up
-          </button>
+          </div>
         </div>
       )}
     </nav>

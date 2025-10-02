@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useAuth, useUser } from "@clerk/nextjs";
 
 import { SidebarProvider } from "@/registry/new-york-v4/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
@@ -35,11 +34,14 @@ import {
   SelectContent,
   SelectItem,
 } from "@/registry/new-york-v4/ui/select";
-import { createSupabaseClientWithAuth } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
+import { UserAuth } from "@/context/AuthContext";
 
 export default function HelpPage() {
-  const { user } = useUser();
-  const { getToken } = useAuth();
+  const { session, signOut } = UserAuth();
+  if (!session) {
+    return <p>Loading</p>;
+  }
 
   const [ticket, setTicket] = useState({ subject: "", message: "" });
   const [category, setCategory] = useState("");
@@ -61,52 +63,6 @@ export default function HelpPage() {
   const glowRef = useRef<HTMLDivElement>(null);
   const bannerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const banner = bannerRef.current;
-    const glow = glowRef.current;
-    if (!banner || !glow) return;
-
-    let animationFrameId: number;
-    let mouseX = 0;
-    let mouseY = 0;
-
-    const updateGlowPosition = () => {
-      glow.style.transform = `translate(${mouseX - glow.offsetWidth / 2}px, ${mouseY - glow.offsetHeight / 2}px)`;
-      animationFrameId = requestAnimationFrame(updateGlowPosition);
-    };
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = banner.getBoundingClientRect();
-      mouseX = e.clientX - rect.left;
-      mouseY = e.clientY - rect.top;
-      glow.style.opacity = "1";
-    };
-
-    const handleMouseEnter = () => {
-      animationFrameId = requestAnimationFrame(updateGlowPosition);
-      glow.style.opacity = "1";
-    };
-
-    const handleMouseLeave = () => {
-      glow.style.opacity = "0";
-      glow.style.transform = "translate(-9999px, -9999px)";
-      cancelAnimationFrame(animationFrameId);
-    };
-
-    banner.addEventListener("mousemove", handleMouseMove);
-    banner.addEventListener("mouseenter", handleMouseEnter);
-    banner.addEventListener("mouseleave", handleMouseLeave);
-
-    return () => {
-      banner.removeEventListener("mousemove", handleMouseMove);
-      banner.removeEventListener("mouseenter", handleMouseEnter);
-      banner.removeEventListener("mouseleave", handleMouseLeave);
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, []);
-
-
-
   // Validation
   useEffect(() => {
     const newErrors: typeof errors = {};
@@ -117,13 +73,9 @@ export default function HelpPage() {
   }, [ticket, category]);
 
   const handleSubmit = async () => {
-    const token = await getToken();
-    if (!token) return;
-
-    const supabase = createSupabaseClientWithAuth(token);
     const { error } = await supabase.from("support-tickets").insert({
-      user_id: user?.id,
-      email: user?.primaryEmailAddress?.emailAddress,
+      user_id: session.user.id,
+      email: session.user.email,
       subject: ticket.subject,
       message: ticket.message,
       category: category,
@@ -184,7 +136,7 @@ export default function HelpPage() {
             <SidebarTrigger className="absolute top-6 left-6" />
             <h1 className="text-5xl font-bold">Support Center</h1>
             <p className="text-lg mt-3 opacity-80">
-              Hi {user?.firstName}, how can we assist you today?
+              Hi, how can we assist you today?
             </p>
           </div>
         </section>
@@ -318,11 +270,15 @@ export default function HelpPage() {
                       <Select
                         value={category}
                         onValueChange={setCategory}
-                        onBlur={() => handleBlur("category")}
+                        name="category"
                         aria-invalid={!!errors.category}
                         aria-describedby="category-error"
                       >
-                        <SelectTrigger id="category" className="w-full">
+                        <SelectTrigger
+                          id="category"
+                          className="w-full"
+                          onBlur={() => handleBlur("category")}
+                        >
                           <SelectValue placeholder="Select category" />
                         </SelectTrigger>
                         <SelectContent>

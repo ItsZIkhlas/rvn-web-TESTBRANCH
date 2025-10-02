@@ -6,6 +6,33 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@keyframes ride {
+  0% { transform: translateX(-150%); }
+  100% { transform: translateX(120%); }
+}
+
+.motorcycle {
+  animation: ride 6s linear infinite;
+  filter: drop-shadow(0 0 10px cyan); 
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slideDown {
+  animation: slideDown 0.25s ease-out forwards;
+}
+
+
+
 :root {
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);

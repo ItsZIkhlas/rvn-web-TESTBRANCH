@@ -49,7 +49,7 @@ export function NavUser() {
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
-                // src={user.imageUrl}
+                src="/user-pfp.jpg"
                 // alt={user.fullName || "User"}
                 />
                 <AvatarFallback className="rounded-lg">

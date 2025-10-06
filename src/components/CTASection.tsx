@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function CTASection() {
   return (
-    <section className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden">
+    <section className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden font-['Montserrat',sans-serif] gap-12 px-6">
       {/* Main content */}
       <div className="relative z-10 text-center px-6 max-w-3xl">
         <motion.h2

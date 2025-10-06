@@ -33,7 +33,7 @@ const testimonials = [
 
 export default function Testimonials() {
   return (
-    <section className="relative py-24 overflow-hidden">
+    <section className="relative py-24 overflow-hidden font-['Montserrat',sans-serif]">
       {/* Background glow */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-purple-700/20 rounded-full blur-3xl animate-pulse" />

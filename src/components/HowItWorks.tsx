@@ -40,7 +40,7 @@ const bikes = [
 
 export default function HowItWorks() {
   return (
-    <section className="relative w-full min-h-screen flex flex-col items-center justify-center px-6 py-16 md:py-24">
+    <section className="relative w-full min-h-screen flex flex-col items-center justify-center px-6 py-16 md:py-24 font-['Montserrat',sans-serif] z-20">
       <svg className="absolute inset-0 w-full h-full pointer-events-none">
         <path
           id="bikePath"

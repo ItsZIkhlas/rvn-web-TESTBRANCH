@@ -26,7 +26,7 @@ const features = [
 
 export default function FeatureSection() {
   return (
-    <section className="relative w-full h-screen flex items-center justify-center px-6">
+    <section className="relative w-full h-screen flex items-center justify-center px-6 font-['Montserrat',sans-serif] z-20">
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}

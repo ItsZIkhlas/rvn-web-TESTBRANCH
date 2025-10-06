@@ -31,6 +31,7 @@ export const metadata: Metadata = {
 const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
   return (
     <html suppressHydrationWarning lang="en">
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
       <body
         className={`${latoMain} bg-background text-foreground overscroll-none antialiased`}
       >

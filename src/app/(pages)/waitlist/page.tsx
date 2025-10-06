@@ -58,12 +58,25 @@ const WaitlistPage = () => {
   };
 
   return (
-    <main className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-black text-white px-6">
+    <main className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-black text-white px-6 font-['Montserrat',sans-serif]">
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossOrigin="anonymous"
+      />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet"
+      />
+
       {/* Gradient Backgrounds */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(138,43,226,0.15),transparent_60%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,_rgba(0,191,255,0.15),transparent_60%)]" />
 
-      <NavBar />
+      <div className="fixed top-4 left-0 w-full z-50 flex justify-center">
+        <NavBar />
+      </div>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -75,14 +88,15 @@ const WaitlistPage = () => {
           Join the RVN Waitlist
         </h1>
         <p className="text-lg md:text-xl text-gray-300 mb-6">
-          Be among the first to experience the world’s first AI-powered track coach.  
-          Sign up now and secure your spot for a board.
+          Be among the first to experience the world’s first AI-powered track
+          coach. Sign up now and secure your spot for a board.
         </p>
 
         {/* Spots Left + Position */}
         <div className="mb-8">
           <p className="text-sm md:text-base font-medium text-gray-400">
-            Only <span className="text-violet-400 font-bold">{spotsLeft}</span> spots left
+            Only <span className="text-violet-400 font-bold">{spotsLeft}</span>{" "}
+            spots left
           </p>
           {position && (
             <p className="text-sm md:text-base font-medium text-gray-400">

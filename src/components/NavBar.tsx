@@ -6,25 +6,25 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 
 const navItems = [
-  { id: 0, title: "Home", link: "/" },
-  { id: 1, title: "Pricing", link: "/pricing" },
-  { id: 3, title: "About Us", link: "/about-us" },
-  { id: 4, title: "Contact Us", link: "/contact" },
+  { id: 0, title: "HOME", link: "/" },
+  { id: 1, title: "PRICING", link: "/pricing" },
+  { id: 3, title: "ABOUT US", link: "/about-us" },
+  { id: 4, title: "CONTACT US", link: "/contact" },
 ];
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="fixed top-4 left-0 w-full z-50 flex justify-center">
-      <div className="flex items-center justify-between w-[90%] md:w-[85%] bg-[#171717] rounded-md py-2 px-4 md:px-6">
+    <nav className="fixed top-4 left-0 w-full z-50 flex justify-center font-['Montserrat',sans-serif]">
+      <div className="flex items-center justify-between w-[90%] md:w-[85%] hover:bg-[#171717] transition duration-400 rounded-md py-2 px-4 md:px-6">
         {/* Logo */}
         <h1 className="text-3xl font-bold bg-gradient-to-r from-violet-400 via-blue-400 to-violet-500 bg-clip-text text-transparent">
           RVN
         </h1>
 
         {/* Desktop Menu */}
-        <ul className="hidden md:flex flex-row gap-6 lg:gap-12 cursor-pointer">
+        <ul className="hidden md:flex flex-row gap-6 lg:gap-12 cursor-pointer font-bold text-white">
           {navItems.map((item) => (
             <Link key={item.id} href={item.link}>
               <li className="hover:bg-[#262626] py-2 px-3 rounded-md transition">

@@ -4,7 +4,7 @@ import { Instagram, Twitter, Youtube, Linkedin } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="relative w-full bg-black text-gray-300 py-16 px-6 overflow-hidden">
+    <footer className="relative w-full bg-black text-gray-300 py-16 px-6 overflow-hidden font-['Montserrat',sans-serif]">
       {/* Neon Orbs */}
       <div className="absolute -top-20 -left-20 w-72 h-72 bg-violet-500 rounded-full mix-blend-soft-light filter blur-[150px] opacity-20 animate-pulse" />
       <div className="absolute -bottom-24 -right-24 w-72 h-72 bg-blue-500 rounded-full mix-blend-soft-light filter blur-[150px] opacity-15 animate-pulse" />

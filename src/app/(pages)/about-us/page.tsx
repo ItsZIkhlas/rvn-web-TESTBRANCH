@@ -17,7 +17,18 @@ const fadeUp = (delay = 0) => ({
 export default function AboutPage() {
 
   return (
-    <main className="relative min-h-screen w-full bg-black text-white overflow-hidden">
+    <main className="relative min-h-screen w-full bg-black text-white overflow-hidden font-['Montserrat',sans-serif]">
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossOrigin="anonymous"
+      />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet"
+      />
+
       {/* Neon fades (same as HomePage) */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(138,43,226,0.15),transparent_60%)] z-0" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,_rgba(0,191,255,0.15),transparent_60%)] z-0" />
@@ -101,7 +112,7 @@ export default function AboutPage() {
               },
               {
                 name: "Asad Yousuf",
-                role: "Founder",
+                role: "Founder & Head of Engineering",
                 img: "/asad.jpg",
                 class: "w-24 h-24",
               },

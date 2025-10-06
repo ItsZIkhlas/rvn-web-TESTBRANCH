@@ -73,7 +73,18 @@ export default function ContactPage() {
 
 
   return (
-    <main className="relative min-h-screen bg-black overflow-hidden">
+    <main className="relative min-h-screen bg-black overflow-hidden font-['Montserrat',sans-serif]">
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossOrigin="anonymous"
+      />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet"
+      />
+
       {/* Gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-violet-900/40 via-black to-blue-900/40 z-0" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(138,43,226,0.25),transparent_60%)] z-0" />

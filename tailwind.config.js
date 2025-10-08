@@ -1,10 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   theme: {
-    // Replace default breakpoints completely
     screens: {
-      xs: "570px", // extra small
-      "mobile": "640px",
+      xs: "570px",
+      mobile: "640px",
       sm: "650px",
       md: "768px",
       lg: "1024px",
@@ -13,7 +12,16 @@ module.exports = {
       "3xl": "1800px",
     },
     extend: {
-      // Any other customizations like colors, spacing, etc.
+      keyframes: {
+        borderAnimation: {
+          "0%": { "background-position": "0% 50%" },
+          "50%": { "background-position": "100% 50%" },
+          "100%": { "background-position": "0% 50%" },
+        },
+      },
+      animation: {
+        borderAnimation: "borderAnimation 6s linear infinite",
+      },
     },
   },
   plugins: [],

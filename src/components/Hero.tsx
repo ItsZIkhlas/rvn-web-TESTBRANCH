@@ -25,7 +25,7 @@ export default function Hero() {
           <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-8xl font-light leading-tight">
             <span className="block lg:inline">Turn Data Into Dominance.</span>
           </h1>
-          <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-medium mt-6 text-blue-300 max-w-[600px]">
+          <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mt-6 text-blue-300 max-w-[600px]">
             The world’s first AI track coach built for performance.
           </p>
         <Link href="/waitlist">

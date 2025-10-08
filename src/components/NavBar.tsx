@@ -17,7 +17,7 @@ const NavBar = () => {
 
   return (
     <nav className="fixed top-4 left-0 w-full z-50 flex justify-center font-['Montserrat',sans-serif]">
-      <div className="flex items-center justify-between w-[90%] md:w-[85%] hover:bg-[#171717] transition duration-400 rounded-md py-2 px-4 md:px-6">
+      <div className="flex items-center justify-between w-[90%] md:w-[85%] hover:bg-[#171717] transition duration-400 rounded-md py-4 px-12 md:px-6">
         {/* Logo */}
         <h1 className="text-3xl font-bold bg-gradient-to-r from-violet-400 via-blue-400 to-violet-500 bg-clip-text text-transparent">
           RVN

@@ -32,6 +32,38 @@
 }
 
 
+/* Rotating border animation */
+@keyframes rotateBorder {
+  0% {
+    transform: translateX(0) rotate(0deg);
+  }
+  25% {
+    transform: translateX(100%) rotate(90deg);
+  }
+  50% {
+    transform: translateX(100%) rotate(180deg);
+  }
+  75% {
+    transform: translateX(0) rotate(270deg);
+  }
+  100% {
+    transform: translateX(0) rotate(360deg);
+  }
+}
+
+.rotating-border {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 2px solid transparent;
+  border-top-color: violet;
+  border-radius: 1rem;
+  animation: rotateBorder 4s linear infinite;
+}
+
+
 
 :root {
   --card: oklch(1 0 0);

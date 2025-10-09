@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Cpu, Activity, MessageSquare, Repeat } from "lucide-react";
+import Approach from "./Approach";
 
 const steps = [
   {
@@ -92,7 +93,7 @@ export default function HowItWorks() {
         </motion.div>
       ))}
       {/* Section Title */}
-      <div className="text-center mb-16 md:mb-24 max-w-3xl">
+      <div className="text-center max-w-3xl">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -112,38 +113,7 @@ export default function HowItWorks() {
       </div>
 
       {/* Steps */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 text-center w-full max-w-6xl">
-        {steps.map((step, index) => {
-          const Icon = step.icon;
-          
-          return (
-            <motion.div
-              key={step.title}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 + index * 0.2 }}
-              className="flex flex-col items-center p-4"
-            >
-              {/* Icon Circle */}
-              <div
-                className={`w-20 h-20 flex items-center justify-center rounded-full bg-gradient-to-tr ${step.color} mb-6 shadow-lg`}
-              >
-                <Icon className="w-10 h-10 text-white" />
-              </div>
-
-              {/* Title */}
-              <h3 className="text-xl md:text-2xl font-semibold text-white mb-2">
-                {step.title}
-              </h3>
-
-              {/* Description */}
-              <p className="text-gray-300 text-sm md:text-base leading-relaxed">
-                {step.description}
-              </p>
-            </motion.div>
-          );
-        })}
-      </div>
+      <Approach />
     </section>
   );
 }

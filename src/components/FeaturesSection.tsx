@@ -12,9 +12,9 @@ const items = [
     className: "col-span-2 row-span-1 md:col-span-2 md:row-span-2",
   },
   {
-    title: "AI Coaching",
-    description: "Tailored feedback powered by AI.",
-    icon: Cpu,
+    title: "Adaptive Learning",
+    description: "Insights that evolve with you.",
+    icon: BrainCircuit,
     className: "col-span-2 row-span-1 md:col-span-1 md:row-span-1",
   },
   {
@@ -30,9 +30,9 @@ const items = [
     className: "col-span-2 row-span-1 md:col-span-1 md:row-span-2",
   },
   {
-    title: "Adaptive Learning",
-    description: "Insights that evolve as you improve.",
-    icon: BrainCircuit,
+    title: "AI Coaching",
+    description: "AI feedback and reports personalized to your riding style.",
+    icon: Cpu,
     className: "col-span-2 row-span-1 md:col-span-2 md:row-span-1",
   },
   {

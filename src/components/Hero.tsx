@@ -2,8 +2,6 @@
 
 import Link from "next/link";
 
-
-
 export default function Hero() {
   return (
     <>
@@ -25,14 +23,14 @@ export default function Hero() {
           <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-8xl font-light leading-tight">
             <span className="block lg:inline">Turn Data Into Dominance.</span>
           </h1>
-          <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mt-6 text-blue-300 max-w-[600px]">
+          <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-thin mt-6 text-blue-300 max-w-[600px]">
             The world’s first AI track coach built for performance.
           </p>
-        <Link href="/waitlist">
-          <button className="hidden mt-10 md:inline-flex items-center justify-center px-10 py-3 rounded-md text-2xl font-medium text-white bg-violet-500 transition-all duration-300 hover:brightness-110 hover:scale-[1.05] active:scale-[0.98] shadow-md hover:shadow-lg">
-            Join RVN
-          </button>
-        </Link>
+          <Link href="/waitlist">
+            <button className="hidden mt-10 md:inline-flex items-center justify-center px-10 py-3 rounded-md text-2xl font-medium text-white bg-violet-500 transition-all duration-300 hover:brightness-110 hover:scale-[1.05] active:scale-[0.98] shadow-md hover:shadow-lg">
+              Join RVN
+            </button>
+          </Link>
         </div>
       </section>
     </>

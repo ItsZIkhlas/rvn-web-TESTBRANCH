@@ -20,7 +20,7 @@ const WaitlistPage = () => {
         .select("*", { count: "exact", head: true });
 
       if (!error) {
-        setSpotsLeft(Math.max(0, 10000 - (count ?? 0)));
+        setSpotsLeft(10000 - (count ?? 0));
       }
     };
     fetchSpots();
@@ -95,8 +95,8 @@ const WaitlistPage = () => {
         {/* Spots Left + Position */}
         <div className="mb-8">
           <p className="text-sm md:text-base font-medium text-gray-400">
-            Only <span className="text-violet-400 font-bold">{spotsLeft}</span>{" "}
-            spots left
+            <span className="text-violet-400 font-bold">{spotsLeft}</span> spots
+            left
           </p>
           {position && (
             <p className="text-sm md:text-base font-medium text-gray-400">

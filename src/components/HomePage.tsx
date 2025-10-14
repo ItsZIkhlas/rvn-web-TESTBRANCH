@@ -5,6 +5,7 @@ import Hero from "./Hero";
 import HowItWorks from "./HowItWorks";
 import MotorcycleRider from "./MotorcycleRider";
 import NavBar from "./NavBar";
+import Push1 from "./Push1";
 import Testimonials from "./Testimonials";
 
 const HomePage = () => {
@@ -37,7 +38,7 @@ const HomePage = () => {
         linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)
       `,
-          backgroundSize: "80px 80px", // size of each square in the grid
+          backgroundSize: "80px 80px",
         }}
       />
 
@@ -59,7 +60,7 @@ const HomePage = () => {
       <div className="relative z-10 sm:pt-20 flex flex-col items-center justify-center gap-20">
         <Hero />
         <FeaturesSection />
-        <HowItWorks />
+        <Push1 />
         <Testimonials />
         <CTASection />
         <Footer />

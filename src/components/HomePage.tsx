@@ -6,6 +6,8 @@ import HowItWorks from "./HowItWorks";
 import MotorcycleRider from "./MotorcycleRider";
 import NavBar from "./NavBar";
 import Push1 from "./Push1";
+import RaceLevel from "./RaceLevels";
+import SensorsCta from "./SensorsCTA";
 import Testimonials from "./Testimonials";
 
 const HomePage = () => {
@@ -61,6 +63,8 @@ const HomePage = () => {
         <Hero />
         <FeaturesSection />
         <Push1 />
+        <RaceLevel />
+        <SensorsCta />
         <Testimonials />
         <CTASection />
         <Footer />
